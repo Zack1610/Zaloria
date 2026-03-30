@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zaloria - Crear Torneo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #121212; color: #e0e0e0; padding-top: 50px; }
+        .card-gamer { background-color: #1e1e1e; border: 1px solid #00bcd4; box-shadow: 0 0 15px rgba(0, 188, 212, 0.2); }
+        .form-control, .form-select { background-color: #2a2a2a; border: 1px solid #444; color: white !important; }
+        label { color: #00bcd4 !important; font-weight: bold; margin-bottom: 5px; display: block; }
+        .btn-cyan { background-color: #00bcd4; color: black; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card card-gamer p-4">
+                <h2 class="text-center mb-4" style="color: #00bcd4;"> Configurar Torneo</h2>
+                
+                <form th:action="@{/torneos/guardar}" th:object="${torneo}" method="post">
+                    <input type="hidden" th:field="*{id}">
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label>Nombre del Torneo:</label>
+                            <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ej: Zaloria Masters" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Estado Inicial:</label>
+                            <select th:field="*{estado}" class="form-select">
+                                <option value="ABIERTO">ABIERTO (Inscripciones)</option>
+                                <option value="EN CURSO">EN CURSO (Jugando)</option>
+                                <option value="FINALIZADO">FINALIZADO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label>Premio (€):</label>
+                            <input type="number" step="0.01" th:field="*{premio}" class="form-control" placeholder="0.00">
+                        </div>
+                        <div class="col-md-4">
+                            <label>Máx. Equipos:</label>
+                            <input type="number" th:field="*{maxEquipos}" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label>Fecha del Evento:</label>
+                            <input type="datetime-local" th:field="*{fecha}" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-cyan">PUBLICAR TORNEO</button>
+                        <a href="/torneos" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
