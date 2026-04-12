@@ -26,21 +26,21 @@ public class EquiposController {
     public String listarEquipos(Model model) {
         List<Equipos> lista = equiposRepo.findAll();
         model.addAttribute("listaEquipos", lista);
-        return "equipos-lista"; // Busca equipos-lista.html en templates
+        return "equipos-lista"; 
     }
 
     // 2. Mostrar el formulario para añadir un equipo
     @GetMapping("/equipos/nuevo")
     public String mostrarFormulario(Model model) {
         model.addAttribute("equipo", new Equipos());
-        return "equipos-form"; // Busca equipos-form.html en templates
+        return "equipos-form"; 
     }
 
     // 3. Guardar el equipo enviado desde el formulario
     @PostMapping("/equipos/guardar")
     public String guardarEquipo(Equipos equipo) {
         equiposRepo.save(equipo);
-        return "redirect:/equipos"; // Al guardar, vuelve a la lista
+        return "redirect:/equipos"; 
     }
 }
 

@@ -51,7 +51,7 @@ public String editarJugador(@PathVariable("id") Integer id, Model model) {
     Jugador j = jugadorRepo.findById(id).orElse(null);
     model.addAttribute("jugador", j);
     model.addAttribute("listaEquipos", equiposRepo.findAll());
-    return "jugadores-form"; // Usamos el mismo formulario que para crear
+    return "jugadores-form"; 
 }
 
 // 2. BORRAR JUGADOR

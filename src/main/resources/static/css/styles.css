@@ -1,0 +1,181 @@
+/* =========================================
+   1. VARIABLES Y CONFIGURACIÓN GLOBAL
+   ========================================= */
+:root {
+    --bg-principal: #121212;
+    --bg-card: #1e1e1e;
+    --texto-base: #e0e0e0;
+    --cian-zaloria: #00bcd4; /* Añadimos esta */
+    --bg-input: #2a2a2a;
+}
+
+/* Colores para el Modo Claro */
+[data-theme="light"] {
+    --bg-principal: #ffffff;
+    --bg-card: #f8f9fa;
+    --texto-base: #212529;
+    --cian-zaloria: #008ba3; /* Un azul más oscuro para que se vea en blanco */
+    --bg-input: #ffffff;
+}
+
+/* Aplicación de variables */
+body { 
+    background-color: var(--bg-principal) !important; 
+    color: var(--texto-base) !important; 
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-gamer, .equipo-card, .table-gamer, .card-final { 
+    background-color: var(--bg-card) !important; 
+    color: var(--texto-base) !important;
+}
+
+/* BOTONES USANDO LA VARIABLE */
+.btn-cyan, .btn-gamer {
+    background-color: var(--cian-zaloria) !important;
+    border-color: var(--cian-zaloria) !important;
+    color: black !important;
+}
+
+[data-theme="light"] .btn-gamer {
+    background-color: #f0f0f0 !important; /* Gris muy clarito para que se vea el botón */
+    color: var(--cian-zaloria) !important;
+}
+
+.btn-cyan:hover, .btn-gamer:hover {
+    background-color: var(--cian-hover);
+    color: white;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   3. FORMULARIOS E INPUTS
+   ========================================= */
+label, .form-label {
+    color: var(--cian-zaloria) !important;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-control, .form-select {
+    background-color: var(--bg-input) !important;
+    border: 1px solid #444 !important;
+    color: white !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #333 !important;
+    border-color: var(--cian-zaloria) !important;
+    box-shadow: 0 0 8px rgba(0, 188, 212, 0.5) !important;
+    outline: none;
+}
+
+/* Parche para el autocompletado blanco de Chrome */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--bg-input) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* =========================================
+   4. TABLAS Y TARJETAS
+   ========================================= */
+.card-gamer {
+    background-color: var(--bg-card);
+    border: 1px solid var(--cian-zaloria);
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.2);
+}
+
+.table-gamer {
+    background-color: var(--bg-card);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,255,255,0.1);
+}
+
+.table-gamer thead {
+    background-color: var(--cian-zaloria);
+    color: black;
+}
+
+.table-gamer tbody tr:hover {
+    background-color: #2a2a2a;
+}
+
+.cyan-text {
+    color: var(--cian-zaloria);
+    font-weight: bold;
+}
+
+/* =========================================
+   5. SECCIONES ESPECÍFICAS
+   ========================================= */
+
+/* Pantalla de Inicio / Logo */
+.logo-principal {
+    max-width: 600px;
+    filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.3));
+    margin-bottom: 30px;
+}
+
+/* Pantalla de Finalización (Coronación) */
+.card-final {
+    background-color: var(--bg-card);
+    border: 2px solid var(--oro);
+    border-radius: 10px;
+}
+
+h3 {
+    color: white !important;
+}
+
+/* Tarjetas de Equipos */
+.equipo-card { 
+    background-color: var(--bg-card); 
+    border-left: 5px solid var(--cian-zaloria); 
+    margin-bottom: 15px; 
+    transition: 0.3s;
+    border-radius: 8px;
+}
+
+.equipo-card:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 5px 15px rgba(0,188,212,0.3); 
+}
+
+/* Badges de Estado */
+.badge-abierto { background-color: var(--cian-zaloria); color: black; }
+.badge-curso { background-color: #ffc107; color: black; }
+
+/* =========================================
+   BOTÓN DE CAMBIO DE TEMA Y LOGOUT
+   ========================================= */
+
+/* Contenedor flotante: Forzamos que no afecte al resto del HTML */
+.selector-tema-flotante {
+    position: fixed !important; 
+    top: 20px !important;     
+    right: 20px !important;   
+    z-index: 9999 !important; /* El número más alto para que nada lo tape */
+    display: flex;
+    flex-direction: column;   /* Uno debajo del otro */
+    gap: 10px;                /* Espacio entre botones */
+    width: auto !important;   /* Que no ocupe todo el ancho de la pantalla */
+}
+
+.selector-tema-flotante .btn {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    border-radius: 50px; 
+    padding: 8px 20px;
+    white-space: nowrap;      /* Evita que el texto se parta en dos líneas */
+    font-size: 0.9rem;
+}
+
+/* Fix para que el contenido de la web no se desplace */
+body {
+    overflow-x: hidden; /* Evita el scroll lateral si algo sobresale */
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zaloria - Finalizar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div th:replace="~{layout :: boton-tema}"></div>
+<div class="container">
+    <div class="card card-final p-4 mx-auto" style="max-width: 500px;">
+        <h2 class="text-warning text-center"> Gran Final</h2>
+        <p class="text-center">Torneo: <strong th:text="${torneo.nombre}"></strong></p>
+
+        <form th:action="@{/torneos/guardar-ganador}" method="post">
+            <input type="hidden" name="torneoId" th:value="${torneo.id}">
+
+            <div class="mb-3">
+                <label class="form-label">Elige al Equipo Ganador:</label>
+                <select name="equipoId" class="form-select bg-dark text-white border-secondary" required>
+                    <option value="">-- Seleccionar --</option>
+                    <option th:each="p : ${participantes}" 
+                            th:value="${p.id}" 
+                            th:text="${p.nombre}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning w-100 fw-bold">REGISTRAR CAMPEÓN</button>
+            <a href="/torneos" class="btn btn-outline-light w-100 mt-2">Cancelar</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

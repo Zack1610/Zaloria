@@ -4,6 +4,7 @@
  */
 package com.ilerna.zaloria.controller;
 
+import com.ilerna.zaloria.model.Equipos;
 import org.springframework.stereotype.Controller;
 
 import com.ilerna.zaloria.model.Torneo;
@@ -67,23 +68,23 @@ public String guardarInscripcion(@RequestParam("torneoId") Integer torneoId,
     com.ilerna.zaloria.model.Equipos e = equipoRepo.findById(equipoId).orElse(null);
     
     if (t != null && e != null) {
-        // 1. Comprobamos si el equipo NO está ya inscrito
+        //  Comprobamos si el equipo NO está ya inscrito
         if (!t.getEquipos().contains(e)) {
-            t.getEquipos().add(e); // 2. Lo añadimos a la lista
-            torneoRepo.save(t);     // 3. Guardamos los cambios en la DB
+            t.getEquipos().add(e); //  Lo añadimos a la lista
+            torneoRepo.save(t);     // Guardamos los cambios en la DB
         }
     }
     return "redirect:/torneos";
 }
 @GetMapping("/torneos/ver/{id}")
 public String verParticipantes(@PathVariable("id") Integer id, Model model) {
-    // 1. Buscamos el torneo por su ID
+    //  Buscamos el torneo por su ID
     Torneo t = torneoRepo.findById(id).orElse(null);
     
     if (t != null) {
-        // 2. Metemos el torneo en la "maleta" (Model) para que el HTML lo use
+        //  Metemos el torneo en la "maleta" (Model) para que el HTML lo use
         model.addAttribute("torneo", t);
-        // 3. Abrimos el archivo torneos-participantes.html
+        //  Abrimos el archivo torneos-participantes.html
         return "torneos-participantes"; 
     }
     
@@ -105,4 +106,58 @@ public String desvincularEquipo(@RequestParam("torneoId") Integer torneoId,
     
     return "redirect:/torneos/ver/" + torneoId;
 }
+@GetMapping("/torneos/finalizar/{id}")
+public String irAFinalizar(@PathVariable("id") Integer id, Model model) {
+    //  Buscamos el torneo en la base de datos
+    Torneo t = torneoRepo.findById(id).orElse(null);
+    
+    if (t != null) {
+        // Pasamos el torneo a la vista
+        model.addAttribute("torneo", t);
+        // Pasamos SOLO los equipos que se inscribieron en este torneo
+        model.addAttribute("participantes", t.getEquipos());
+        
+        return "torneos-finalizar"; 
+    }
+    return "redirect:/torneos";
+}
+@PostMapping("/torneos/guardar-ganador")
+public String guardarGanador(@RequestParam("torneoId") Integer torneoId, 
+                             @RequestParam("equipoId") Integer equipoId) {
+    
+    // Buscamos el torneo y el equipo por sus IDs
+    Torneo t = torneoRepo.findById(torneoId).orElse(null);
+    Equipos e = equipoRepo.findById(equipoId).orElse(null);
+    
+    if (t != null && e != null) {
+        // Le asignamos el ganador al torneo
+        t.setGanador(e);
+        // Opcional: Cambiamos el estado a FINALIZADO
+        t.setEstado("FINALIZADO");
+        
+        // Guardamos los cambios en la base de datos
+        torneoRepo.save(t);
+    }
+
+    //  Volvemos a la lista principal para ver el resultado
+    return "redirect:/torneos";
+}
+@GetMapping("/torneos/eliminar/{id}")
+public String eliminarTorneo(@PathVariable("id") Integer id) {
+    // Buscamos el torneo para verificar que existe
+    Torneo t = torneoRepo.findById(id).orElse(null);
+    
+    if (t != null) {
+        // Limpiamos las relaciones (opcional pero recomendado)
+        
+        // Esto evita errores si el torneo tiene equipos inscritos
+        t.getEquipos().clear(); 
+        
+        // Borramos el torneo definitivamente
+        torneoRepo.delete(t);
+    }
+    // Recargamos la lista para ver que ya no está
+    return "redirect:/torneos";
+}
+
 }

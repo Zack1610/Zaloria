@@ -12,13 +12,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Table(name = "torneos")
 public class Torneo {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id //hibernaste necesita saber cual es la primary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //este id generamela de forma auto- cada vez que recibas un nuevo registro
     private Integer id;
 
     private String nombre;
     
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") // Esto es el traductor para el HTML
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") 
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
 
@@ -26,6 +26,9 @@ public class Torneo {
     
     @Column(name = "max_equipos")
     private Integer maxEquipos;
+    
+    @ManyToOne//con esto le digo que un equipo puede ser ganador en muchos torneos
+    private Equipos ganador;
 
     private String estado; // 'ABIERTO', 'EN CURSO', 'FINALIZADO'
 
@@ -59,4 +62,13 @@ public class Torneo {
     
     public List<Equipos> getEquipos() { return equipos; }
     public void setEquipos(List<Equipos> equipos) { this.equipos = equipos; }
+
+    public Equipos getGanador() {
+        return ganador;
+    }
+
+    public void setGanador(Equipos ganador) {
+        this.ganador = ganador;
+    }
+    
 }
