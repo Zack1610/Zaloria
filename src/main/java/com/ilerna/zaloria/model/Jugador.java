@@ -6,7 +6,7 @@ import jakarta.persistence.*;
  * @author Zack
  */
 @Entity
-@Table(name = "jugadores")
+@Table(name = "jugador")
 public class Jugador {
 
     @Id
@@ -15,6 +15,9 @@ public class Jugador {
 
     private String nickname;
     private String email;
+
+    @Column(name = "skin_url") // El nombre exacto de la columna SQL
+    private String skinUrl;
 
     // RELACIÓN: Muchos jugadores pertenecen a UN equipo
     @ManyToOne
@@ -55,5 +58,13 @@ public class Jugador {
 
     public void setEquipo(Equipos equipo) {
         this.equipo = equipo;
+    }
+
+    public String getSkinUrl() {
+        return skinUrl;
+    }
+
+    public void setSkinUrl(String skinUrl) {
+        this.skinUrl = skinUrl;
     }
 }

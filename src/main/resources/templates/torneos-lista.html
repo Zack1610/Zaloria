@@ -8,7 +8,7 @@
 </head>
 <body>
     <div th:replace="~{layout :: boton-tema}"></div>
-<div class="container">
+<div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
         <h1 class="display-6 fw-bold cyan-text"> Torneos Zaloria</h1>
         <div>
@@ -21,59 +21,67 @@
         <table class="table table-dark table-hover align-middle mb-0">
             <thead>
                 <tr style="border-bottom: 2px solid #00bcd4;">
+                    <th>Banner</th>
                     <th>Evento</th>
                     <th>Fecha y Hora</th>
                     <th>Premio</th>
-                    <th>Máx. Equipos</th>
                     <th>Estado</th>
-                    <th class="text-center">Participantes</th>
+                    <th class="text-center">Equipos</th>
                     <th>Ganador</th>
                     <th class="text-center">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-    <tr th:each="t : ${listaTorneos}">
-        <td class="fw-bold text-info" th:text="${t.nombre}">Evento</td>
-        <td th:text="${#dates.format(t.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</td>
-        <td class="text-warning fw-bold" th:text="${t.premio + ' €'}">Premio</td>
-        <td th:text="${t.maxEquipos}">Máx</td>
-        <td>
-            <span class="badge" 
-                  th:classappend="${t.estado == 'ABIERTO' ? 'badge-abierto' : 'badge-curso'}"
-                  th:text="${t.estado}">Estado</span>
-        </td>
-        
-        <td class="text-center">
-            <a th:href="@{/torneos/ver/{id}(id=${t.id})}" class="badge-link">
-                <span class="badge bg-secondary" 
-                      th:text="${t.equipos != null ? t.equipos.size() : 0}">0</span>
-            </a>
-        </td>
+                <tr th:each="t : ${listaTorneos}">
+                    <td>
+                        <img th:src="@{'/images/banners/' + ${t.bannerUrl != null ? t.bannerUrl : 'default_banner.jpg'}}" 
+                             alt="Banner" 
+                             class="rounded"
+                             style="width: 80px; height: 45px; object-fit: cover; border: 1px solid #444;">
+                    </td>
 
-        <td class="text-white">
-            <span th:text="${t.ganador != null ? '🏆 ' + t.ganador.nombre : '---'}"></span>
-        </td>
-        
-        <td class="text-center">
-    <a th:if="${t.ganador == null}" 
-       th:href="@{/torneos/inscribir/{id}(id=${t.id})}" 
-       class="btn btn-sm btn-outline-info">
-        Inscribir
-    </a>
-    
-    <a th:if="${t.ganador == null}" 
-       th:href="@{/torneos/finalizar/{id}(id=${t.id})}" 
-       class="btn btn-sm btn-outline-warning ms-2">
-       🏆 Finalizar
-    </a>
-            <a th:href="@{/torneos/eliminar/{id}(id=${t.id})}" 
-   class="btn btn-sm btn-outline-danger ms-1"
-   onclick="return confirm('¿Estás seguro de que quieres eliminar este torneo?')">
-   ️ Eliminar
-</a>
-</td>
-    </tr>
-</tbody>
+                    <td class="fw-bold text-info" th:text="${t.nombre}">Evento</td>
+                    <td th:text="${#dates.format(t.fecha, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                    
+                    <td th:text="${t.premio} + ' €'">Premio</td>
+                    
+                    <td>
+                        <span class="badge" 
+                              th:classappend="${t.estado == 'ABIERTO' ? 'badge-abierto' : 'badge-curso'}"
+                              th:text="${t.estado}">Estado</span>
+                    </td>
+                    
+                    <td class="text-center">
+                        <a th:href="@{/torneos/ver/{id}(id=${t.id})}" class="badge-link">
+                            <span class="badge bg-secondary" 
+                                  th:text="${(t.equipos != null ? t.equipos.size() : 0) + ' / ' + t.maxEquipos}">0</span>
+                        </a>
+                    </td>
+
+                    <td class="text-white">
+                        <div th:if="${t.ganador != null}" class="d-flex align-items-center">
+                            <img th:src="@{'/images/logos/' + ${t.ganador.logoUrl}}" 
+                                 class="rounded-circle me-2" style="width: 25px; height: 25px;">
+                            <span th:text="${t.ganador.nombre}"></span>
+                        </div>
+                        <span th:if="${t.ganador == null}">---</span>
+                    </td>
+                    
+                    <td class="text-center">
+                        <a th:if="${t.ganador == null}" 
+                           th:href="@{/torneos/inscribir/{id}(id=${t.id})}" 
+                           class="btn btn-sm btn-outline-info">Inscribir</a>
+                        
+                        <a th:if="${t.ganador == null}" 
+                           th:href="@{/torneos/finalizar/{id}(id=${t.id})}" 
+                           class="btn btn-sm btn-outline-warning ms-1">🏆 Finalizar</a>
+
+                        <a th:href="@{/torneos/eliminar/{id}(id=${t.id})}" 
+                           class="btn btn-sm btn-outline-danger ms-1"
+                           onclick="return confirm('¿Estás seguro de que quieres eliminar este torneo?')">Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </div>

@@ -6,8 +6,8 @@ import jakarta.persistence.*;
  * @author Zack
  */
 @Entity
-@Table(name = "equipos") // Debe coincidir con el nombre en phpMyAdmin
-public class Equipos{
+@Table(name = "equipo") 
+public class Equipos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,14 +15,17 @@ public class Equipos{
 
     private String nombre;
     private String capitan;
-    private String entrenadores;
+    private String entrenador; // Cambiado a singular según el nuevo SQL
     private String managers;
+    
+    @Column(name = "logo_url")
+    private String logoUrl; // Atributo para el logo del equipo
 
-    // Constructor vacío (Obligatorio para que Spring funcione)
+    // Constructor vacío (Obligatorio)
     public Equipos() {
     }
 
-    // Getters y Setters (Los "grifos" para leer y escribir datos)
+    // Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -47,12 +50,12 @@ public class Equipos{
         this.capitan = capitan;
     }
 
-    public String getEntrenadores() {
-        return entrenadores;
+    public String getEntrenador() {
+        return entrenador;
     }
 
-    public void setEntrenadores(String entrenadores) {
-        this.entrenadores = entrenadores;
+    public void setEntrenador(String entrenador) {
+        this.entrenador = entrenador;
     }
 
     public String getManagers() {
@@ -61,5 +64,13 @@ public class Equipos{
 
     public void setManagers(String managers) {
         this.managers = managers;
+    }
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
     }
 }

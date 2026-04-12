@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
  *
  * @author Zack
  */
+import java.io.File; // Importante para leer la carpeta
+
 @Controller
 public class JugadorController {
     @Autowired
@@ -31,12 +33,16 @@ public class JugadorController {
         return "jugadores-lista";
     }
 
-    // Formulario para nuevo jugador
+    // Formulario para nuevo jugador (Con selector de skins)
     @GetMapping("/jugadores/nuevo")
     public String mostrarFormulario(Model model) {
         model.addAttribute("jugador", new Jugador());
-        // Pasamos la lista de equipos para el desplegable (Select)
         model.addAttribute("listaEquipos", equiposRepo.findAll());
+        
+        // Leer archivos de la carpeta skins
+        File carpetaSkins = new File("src/main/resources/static/images/skins/");
+        model.addAttribute("listaSkins", carpetaSkins.list());
+        
         return "jugadores-form";
     }
 
@@ -45,20 +51,26 @@ public class JugadorController {
         jugadorRepo.save(jugador);
         return "redirect:/jugadores";
     }
-   // 1. EDITAR JUGADOR (Carga el formulario con los datos actuales)
-@GetMapping("/jugadores/editar/{id}")
-public String editarJugador(@PathVariable("id") Integer id, Model model) {
-    Jugador j = jugadorRepo.findById(id).orElse(null);
-    model.addAttribute("jugador", j);
-    model.addAttribute("listaEquipos", equiposRepo.findAll());
-    return "jugadores-form"; 
-}
 
-// 2. BORRAR JUGADOR
-@GetMapping("/jugadores/borrar/{id}")
-public String borrarJugador(@PathVariable("id") Integer id) {
-    jugadorRepo.deleteById(id);
-    return "redirect:/jugadores";
-}
+    // EDITAR JUGADOR (También necesita cargar la lista de skins)
+    @GetMapping("/jugadores/editar/{id}")
+    public String editarJugador(@PathVariable("id") Integer id, Model model) {
+        Jugador j = jugadorRepo.findById(id).orElse(null);
+        model.addAttribute("jugador", j);
+        model.addAttribute("listaEquipos", equiposRepo.findAll());
+        
+        // Cargar skins también aquí para poder cambiarlas al editar
+        File carpetaSkins = new File("src/main/resources/static/images/skins/");
+        model.addAttribute("listaSkins", carpetaSkins.list());
+        
+        return "jugadores-form"; 
+    }
+
+    // BORRAR JUGADOR
+    @GetMapping("/jugadores/borrar/{id}")
+    public String borrarJugador(@PathVariable("id") Integer id) {
+        jugadorRepo.deleteById(id);
+        return "redirect:/jugadores";
+    }
 }
 

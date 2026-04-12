@@ -8,10 +8,10 @@
 </head>
 <body>
     <div th:replace="~{layout :: boton-tema}"></div>
-<div class="container">
+<div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card card-gamer p-4">
+            <div class="card card-gamer p-4 shadow-lg">
                 <h2 class="text-center mb-4" style="color: #00bcd4;"> Registrar Jugador</h2>
                 
                 <form th:action="@{/jugadores/guardar}" th:object="${jugador}" method="post">
@@ -26,6 +26,15 @@
                         <label class="form-label">Email:</label>
                         <input type="email" th:field="*{email}" class="form-control" placeholder="zack@zaloria.com">
                     </div>
+
+                 <div class="mb-3">
+                        <label class="form-label">Selecciona Skin:</label>
+                    <select th:field="*{skinUrl}" class="form-select bg-dark text-white border-secondary">
+                    <option value="" selected>-- Sin Skin --</option>
+                    <option th:each="s : ${listaSkins}" th:value="${s}" th:text="${s}"></option>
+                </select>
+                    <small class="text-info">Lista generada desde /images/skins/</small>
+                                    </div>
                     
                     <div class="mb-4">
                         <label class="form-label">Equipo:</label>

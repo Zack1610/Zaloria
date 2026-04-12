@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.io.File;
 
 import java.util.List;
 /**
@@ -29,10 +30,16 @@ public class EquiposController {
         return "equipos-lista"; 
     }
 
-    // 2. Mostrar el formulario para añadir un equipo
+    // 2. Mostrar el formulario para añadir un equipo (Con selector de logos)
     @GetMapping("/equipos/nuevo")
     public String mostrarFormulario(Model model) {
         model.addAttribute("equipo", new Equipos());
+        
+        // Leer archivos de la carpeta logos
+        File carpetaLogos = new File("src/main/resources/static/images/logos/");
+        String[] listaLogos = carpetaLogos.list();
+        model.addAttribute("listaLogos", listaLogos);
+        
         return "equipos-form"; 
     }
 

@@ -8,25 +8,35 @@
 </head>
 <body>
     <div th:replace="~{layout :: boton-tema}"></div>
-<div class="container">
+<div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card card-gamer p-4 text-center">
+            <div class="card card-gamer p-4 text-center shadow-lg">
+                <div class="mb-4">
+                    <img th:src="@{'/images/banners/' + ${torneo.bannerUrl != null ? torneo.bannerUrl : 'default_banner.jpg'}}" 
+                         class="img-fluid rounded border border-info shadow" 
+                         alt="Banner Torneo"
+                         style="max-height: 200px; width: 100%; object-fit: cover;">
+                </div>
+
                 <h3 class="mb-4">Inscribir en: <span class="text-info" th:text="${torneo.nombre}"></span></h3>
                 
                 <form th:action="@{/torneos/inscribir/guardar}" method="post">
                     <input type="hidden" name="torneoId" th:value="${torneo.id}">
                     
                     <div class="mb-4 text-start">
-                        <label class="form-label text-info">Selecciona el Equipo:</label>
-                        <select name="equipoId" class="form-select bg-dark text-white" required>
+                        <label class="form-label text-info fw-bold">Selecciona el Equipo Aspirante:</label>
+                        <select name="equipoId" class="form-select bg-dark text-white border-secondary" required>
                             <option value="">-- Elegir Equipo --</option>
-                            <option th:each="e : ${listaEquipos}" th:value="${e.id}" th:text="${e.nombre}"></option>
+                            <option th:each="e : ${listaEquipos}" 
+                                    th:value="${e.id}" 
+                                    th:text="${e.nombre}"></option>
                         </select>
+                        <small class="text-muted">Solo aparecerán los equipos registrados en el sistema.</small>
                     </div>
                     
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-cyan">CONFIRMAR INSCRIPCIÓN</button>
+                        <button type="submit" class="btn btn-cyan fw-bold">CONFIRMAR INSCRIPCIÓN</button>
                         <a href="/torneos" class="btn btn-outline-secondary">Cancelar</a>
                     </div>
                 </form>

@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @author Zack
  */
 @Entity
-@Table(name = "torneos")
+@Table(name = "torneo")
 public class Torneo {
 
     @Id //hibernaste necesita saber cual es la primary key
@@ -32,11 +32,13 @@ public class Torneo {
 
     private String estado; // 'ABIERTO', 'EN CURSO', 'FINALIZADO'
 
+    private String bannerUrl;
+
     public Torneo() {
     }
 @ManyToMany
     @JoinTable(
-      name = "inscripciones", 
+      name = "inscripcion", 
       joinColumns = @JoinColumn(name = "torneo_id"), 
       inverseJoinColumns = @JoinColumn(name = "equipo_id"))
     private List<Equipos> equipos;
@@ -70,5 +72,11 @@ public class Torneo {
     public void setGanador(Equipos ganador) {
         this.ganador = ganador;
     }
-    
+    public String getBannerUrl() {
+    return bannerUrl;
+}
+
+public void setBannerUrl(String bannerUrl) {
+    this.bannerUrl = bannerUrl;
+}
 }
