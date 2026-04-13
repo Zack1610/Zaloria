@@ -2,96 +2,201 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Zaloria eSports - Comunidad</title>
+    <title>Zaloria - Comunidad</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/styles.css}">
-</head>
-<body>
-    <div th:replace="~{layout :: boton-tema}"></div>
+    <style>
+        /* 1. UNIFICACIÓN DE BLOQUES (Efecto Hover para TODOS) */
+        .card-gamer, .card-sidebar {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(0, 188, 212, 0.2);
+            overflow: hidden;
+        }
 
-    <header class="py-5 text-center" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/images/banner-gaming.jpg'); background-size: cover;">
-        <img th:src="@{/images/Zaloria_portada.png}" style="max-width: 300px;" alt="Logo">
-        <h1 class="display-4 fw-bold cyan-text mt-3">¡Bienvenidos a la Arena!</h1>
-        <p class="lead">Entérate de los próximos torneos y las noticias más épicas.</p>
+        .card-gamer:hover, .card-sidebar:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 188, 212, 0.3);
+            border-color: #00bcd4;
+        }
+
+        /* 2. ADAPTACIÓN DE TEXTOS SEGÚN EL TEMA */
+        body.bg-dark .card-sidebar {
+            background: #1a1a1a !important;
+            color: white !important;
+        }
+        
+        body.light-mode {
+            background-color: #f4f4f4 !important;
+            color: #333 !important;
+        }
+        body.light-mode .card-gamer, 
+        body.light-mode .card-sidebar {
+            background: white !important;
+            color: #333 !important;
+            border-color: #ddd;
+        }
+        body.light-mode .text-white-50, 
+        body.light-mode .text-muted {
+            color: #666 !important;
+        }
+        body.light-mode .cyan-text, 
+        body.light-mode .text-info {
+            color: #008ba3 !important; 
+        }
+
+        /* 3. HEADER Y SIDEBAR */
+        .header-comunidad {
+            position: relative;
+            padding: 100px 0;
+            min-height: 500px;
+            background-image: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0) 50%), 
+                              url('/images/comunidad/banner-secundario.png');
+            background-size: cover;
+            background-position: center 20%;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+            border-bottom: 4px solid #00bcd4;
+        }
+
+        .header-comunidad h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #00bcd4;
+            text-transform: uppercase;
+            text-shadow: 0px 4px 15px rgba(0, 0, 0, 1);
+            margin-bottom: 10px;
+        }
+
+        .sidebar-derecho, .sidebar-izquierdo {
+            position: sticky;
+            top: 20px;
+        }
+
+        .tema-toggle-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-dark text-white">
+    <div class="tema-toggle-container">
+        <div th:replace="~{layout :: boton-tema}"></div>
+    </div>
+
+    <header class="header-comunidad py-5 text-center">
+        <h1 class="display-4 fw-bold">Region global Zaloria</h1>
+        <div class="container">
+            <p class="mx-auto" style="max-width: 800px; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 50px; border: 1px solid rgba(0,188,212,0.3);">
+                “Explora la región de Zaloria: donde los héroes se reúnen.” Sumérgete en un mundo forjado por la gloria de los torneos y la pasión gamer.
+            </p>
+        </div>
     </header>
 
-    <main class="container my-5">
+    <main class="container-fluid my-5 px-4">
         <div class="row">
-            <div class="col-lg-8">
-                <h2 class="cyan-text border-bottom border-secondary pb-2 mb-4">📰 Últimas Noticias</h2>
-                
-                <div class="card card-gamer mb-4">
-                    <div class="card-body">
-                        <span class="badge bg-info text-dark">ANUNCIO</span>
-                        <h4 class="mt-2">Gran Torneo de Primavera 2026</h4>
-                        <p>Las inscripciones están abiertas. Prepárate para luchar por el gran premio de 500€ en hardware.</p>
-                        <a href="#" class="btn btn-sm btn-outline-info">Leer más...</a>
-                    </div>
-                </div>
-
-                <div class="card card-gamer mb-4">
-                    <div class="card-body">
-                        <span class="badge bg-warning text-dark">PARCHE</span>
-                        <h4 class="mt-2">Nuevas reglas en la liga de WuWa</h4>
-                        <p>Se han actualizado las restricciones de personajes para los próximos duelos.</p>
+            
+            <div class="col-lg-3">
+                <div class="sidebar-izquierdo d-flex flex-column gap-3">
+                    <div class="card card-gamer p-3">
+                        <h4 class="cyan-text h5">Cartel del Gremio</h4>
+                        <img th:src="@{/images/comunidad/cartel-publicidad.png}" class="img-fluid rounded mb-2" alt="Cartel del Gremio">
+                        <p class="small cyan-text mb-0">El Flux susurra entre los cristales de Zaloria, buscando nuevos campeones. Cada victoria deja una chispa en su corriente… y cada derrota, una sombra que crece.</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4">
-                <div class="p-4 bg-dark rounded shadow-sm">
-                    <h3 class="cyan-text">Zona Staff</h3>
-                    <p>Si eres administrador del torneo, accede aquí para gestionar datos.</p>
-                   <a href="/admin" class="btn btn-gamer w-100">🔒 Acceso Administrador</a>
-                </div>
-            </div>
-        </div>
-        <section class="mt-5 pt-5 border-top border-secondary">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card card-gamer shadow-lg">
-                <div class="card-header text-center">
-                    <h2 class="cyan-text mt-2">🛡️ ÚNETE A LA LEYENDA</h2>
-                    <p class="text-white-50">Envía tu solicitud para entrar en la próxima temporada</p>
-                </div>
-                <div class="card-body p-4">
-                    <form action="#" method="POST">
+            <div class="col-lg-6">
+                <section class="card card-gamer p-4 mb-4" id="noticia-principal">
+                    <h2 class="cyan-text">El Lobby: Bombazo</h2>
+                    <p class="cyan-text">Los aventureros Protestan!</p>
+                    <img th:src="@{/images/comunidad/subida-pavos.png}" class="img-fluid rounded mb-3" alt="pavos">
+                    <p>Nueva temporada llegó cargada de <strong>polémica</strong> vinculada a un aumento de precio...</p>
+                    <blockquote class="border-start ps-3 fst-italic">
+                         La suscripción mensual, “El Pase“, pasará de costar 950 paVos a 800 por el mismo precio de coins...
+                    </blockquote>
+                </section>
+
+                <section class="card card-gamer p-4 mb-4" id="hype-check">
+                    <h2 class="cyan-text">¿Sabotaje del Equipo Toon Trouble?</h2>
+                    <img th:src="@{/images/comunidad/persecusion.png}" class="img-fluid rounded mb-3" alt="persecusion">
+                    <h2 class="cyan-text h4">"La Fuga del Diablo de Zaloria"</h2>
+                    <p class="text-info">Un diablillo travieso roba la espada sagrada del capitán de los Zelderos...</p>
+                </section>
+
+                <section class="card card-gamer p-4 mb-4">
+                    <div class="card-header border-0 bg-transparent text-center">
+                        <h2 class="cyan-text mt-2">¡Únete al gremio de la región!</h2>
+                    </div>
+                    <form id="formSolicitud" th:action="@{/solicitudes/guardar}" method="POST">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Nombre Real</label>
-                                <input type="text" class="form-control" placeholder="Ej: Juan Pérez" required>
+                                <label class="form-label">Nickname:</label>
+                                <input type="text" name="nickname" class="form-control bg-dark text-white border-secondary" required>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Nickname / Gamertag</label>
-                                <input type="text" class="form-control" placeholder="Ej: ZaloriaMaster_99" required>
+                                <label class="form-label">Equipo aspirado:</label>
+                                <select name="equipoId" class="form-select bg-dark text-white border-secondary" required>
+                                    <option value="" disabled selected>-- Seleccionar --</option>
+                                    <option th:each="e : ${listaEquipos}" th:value="${e.id}" th:text="${e.nombre}"></option>
+                                </select>
                             </div>
                         </div>
-
                         <div class="mb-3">
-                            <label class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" placeholder="nombre@ejemplo.com" required>
+                            <label class="form-label">Mensaje:</label>
+                            <textarea name="mensaje" class="form-control bg-dark text-white border-secondary" rows="3" required></textarea>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">¿Por qué quieres unirte a Zaloria?</label>
-                            <textarea class="form-control" rows="3" placeholder="Cuéntanos un poco sobre ti y tu experiencia..."></textarea>
-                        </div>
-
-                        <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-cyan px-5 py-2">
-                                ENVIAR SOLICITUD 🚀
-                            </button>
-                        </div>
+                        <button type="submit" class="btn btn-cyan w-100 fw-bold">ENVIAR SOLICITUD</button>
                     </form>
+                </section>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="sidebar-derecho d-flex flex-column gap-3">
+                    
+                    <div class="card card-gamer p-3 border-info">
+                        <h4 class="cyan-text h5">🔒 Zona Staff</h4>
+                        <p class="small cyan-text mb-0">Gestión de torneos y equipos.</p>
+                        <a href="/admin" class="btn btn-outline-info btn-sm w-100">Panel de Administración</a>
+                    </div>
+
+                    <div class="card card-gamer p-3">
+                        <h4 class="cyan-text h5">Merch (casi oficial)</h4>
+                        <img th:src="@{/images/merch/termo-pyro.png}" class="img-fluid rounded mb-2" alt="Termo Pyro">
+                        <p class="small cyan-text mb-0">Coming soon</p>
+                    </div>
+
+                    <div class="card card-gamer p-3">
+                        <h4 class="cyan-text h5">Camisetas Oficiales</h4>
+                        <img th:src="@{/images/merch/camisa-toon.png}" class="img-fluid rounded mb-2" alt="Camisa Toon">
+                        <p class="small cyan-text mb-0">Coming soon</p>
+                    </div>
+
+                    <div class="card card-gamer p-3">
+                        <h4 class="cyan-text h5">Mousepads Gamer</h4>
+                        <img th:src="@{/images/merch/mousepad-kaedehara.png}" class="img-fluid rounded mb-2" alt="Mousepad">
+                        <p class="small cyan-text mb-0">Coming soon</p>
+                    </div>
+
+                    <div class="card card-gamer p-3">
+                        <h4 class="cyan-text h5">Teclado Zelderos</h4>
+                        <img th:src="@{/images/merch/teclado-zelderos.png}" class="img-fluid rounded mb-2" alt="Teclado">
+                        <p class="small cyan-text mb-0">Coming soon</p>
+                    </div>
                 </div>
             </div>
+
         </div>
-    </div>
-</section>
     </main>
 
     <footer class="text-center py-4 border-top border-secondary">
-        <p class="cyan-text">Zaloria eSports &copy; 2026</p>
+        <p>&copy; 2026 Zaloria eSports - El Diario del Gamer</p>
     </footer>
 </body>
 </html>
