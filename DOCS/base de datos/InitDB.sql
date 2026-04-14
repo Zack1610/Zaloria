@@ -56,3 +56,14 @@ CREATE TABLE resultado (
     FOREIGN KEY (equipo_ganador_id) REFERENCES equipo(id),
     FOREIGN KEY (id_mvp) REFERENCES jugador(id)
 );
+
+/* 6. Tabla de Solicitudes (Gremio / Comunidad) */
+CREATE TABLE solicitudes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    nickname VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    motivo TEXT,
+    estado ENUM('PENDIENTE', 'ACEPTADA', 'RECHAZADA') DEFAULT 'PENDIENTE'
+);

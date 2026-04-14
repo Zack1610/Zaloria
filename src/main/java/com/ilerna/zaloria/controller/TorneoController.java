@@ -12,7 +12,6 @@ import com.ilerna.zaloria.repository.EquiposRepository;
 import com.ilerna.zaloria.repository.TorneoRepository;
 import java.io.File;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,7 +32,7 @@ public class TorneoController {
 
     @Autowired // Inyecta el repositorio de equipos para las inscripciones y ganadores
     private EquiposRepository equipoRepo;
-
+    
     // LISTAR TODOS LOS TORNEOS
     @GetMapping("/torneos")
     public String listarTorneos(Model model) {

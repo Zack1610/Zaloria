@@ -131,30 +131,47 @@
                 </section>
 
                 <section class="card card-gamer p-4 mb-4">
-                    <div class="card-header border-0 bg-transparent text-center">
-                        <h2 class="cyan-text mt-2">¡Únete al gremio de la región!</h2>
-                    </div>
-                    <form id="formSolicitud" th:action="@{/solicitudes/guardar}" method="POST">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Nickname:</label>
-                                <input type="text" name="nickname" class="form-control bg-dark text-white border-secondary" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Equipo aspirado:</label>
-                                <select name="equipoId" class="form-select bg-dark text-white border-secondary" required>
-                                    <option value="" disabled selected>-- Seleccionar --</option>
-                                    <option th:each="e : ${listaEquipos}" th:value="${e.id}" th:text="${e.nombre}"></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Mensaje:</label>
-                            <textarea name="mensaje" class="form-control bg-dark text-white border-secondary" rows="3" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-cyan w-100 fw-bold">ENVIAR SOLICITUD</button>
-                    </form>
-                </section>
+    <div class="card-header border-0 bg-transparent text-center">
+        <h2 class="cyan-text mt-2">🛡️ ÚNETE AL GREMIO DE ZALORIA</h2>
+        <p class="text-white-50 small">Envía tu perfil para ser reclutado por los mejores equipos</p>
+    </div>
+    
+    <form id="formSolicitud" th:action="@{/solicitudes/guardar}" method="POST">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-info">Nombre Real:</label>
+                <input type="text" name="nombre" class="form-control bg-dark text-white border-secondary" placeholder="Ej: Juan Pérez" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-info">Correo Electrónico:</label>
+                <input type="email" name="email" class="form-control bg-dark text-white border-secondary" placeholder="nombre@ejemplo.com" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-info">Nickname / Gamertag:</label>
+                <input type="text" name="nickname" class="form-control bg-dark text-white border-secondary" placeholder="Ej: ZaloriaMaster_99" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-info">Equipo de interés:</label>
+                <select class="form-select bg-dark text-white border-secondary">
+                    <option value="" selected disabled>-- Seleccionar (Opcional) --</option>
+                    <option th:each="e : ${listaEquipos}" th:value="${e.id}" th:text="${e.nombre}"></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-info">¿Por qué quieres unirte? (Motivo):</label>
+            <textarea name="motivo" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Cuéntanos tu experiencia o tus metas en la región..." required></textarea>
+        </div>
+
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-cyan w-100 fw-bold">ENVIAR MI SOLICITUD AL STAFF 🚀</button>
+        </div>
+    </form>
+</section>
             </div>
 
             <div class="col-lg-3">
