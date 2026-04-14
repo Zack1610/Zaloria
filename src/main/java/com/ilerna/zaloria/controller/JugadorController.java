@@ -6,12 +6,15 @@ package com.ilerna.zaloria.controller;
 import com.ilerna.zaloria.model.Jugador;
 import com.ilerna.zaloria.repository.EquiposRepository;
 import com.ilerna.zaloria.repository.JugadorRepository;
+import com.ilerna.zaloria.repository.SolicitudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 /**
  *
  * @author Zack
@@ -25,6 +28,9 @@ public class JugadorController {
 
     @Autowired
     private EquiposRepository equiposRepo;
+    
+    @Autowired
+    private SolicitudRepository solicitudRepo; 
 
     // Listar todos los jugadores
     @GetMapping("/jugadores")
@@ -47,10 +53,21 @@ public class JugadorController {
     }
 
     @PostMapping("/jugadores/guardar")
-    public String guardarJugador(Jugador jugador) {
-        jugadorRepo.save(jugador);
-        return "redirect:/jugadores";
+public String guardarJugador(Jugador jugador, @RequestParam(value="solicitudId", required=false) Integer solicitudId) {
+    // 1. Guardamos el nuevo jugador oficial
+    jugadorRepo.save(jugador);
+    
+    // 2. Si venía de una solicitud, cambiamos su estado a ACEPTADA
+    if (solicitudId != null) {
+        solicitudRepo.findById(solicitudId).ifPresent(s -> {
+            s.setEstado("ACEPTADA"); // Aquí es donde cambia en la base de datos
+            solicitudRepo.save(s);
+        });
     }
+    
+    // Redirigimos a la lista de jugadores para ver el nuevo fichaje
+    return "redirect:/jugadores";
+}
 
     // EDITAR JUGADOR (También necesita cargar la lista de skins)
     @GetMapping("/jugadores/editar/{id}")

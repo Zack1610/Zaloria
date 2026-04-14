@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
+import com.ilerna.zaloria.repository.EquiposRepository;
 
 import com.ilerna.zaloria.model.Solicitud;
 import com.ilerna.zaloria.repository.SolicitudRepository;
+import java.io.File;
 import java.util.List;
 import org.springframework.ui.Model;
 
@@ -18,6 +20,9 @@ import org.springframework.ui.Model;
 public class SolicitudController {
     @Autowired
     private SolicitudRepository solicitudRepo;
+    
+    @Autowired
+    private EquiposRepository equiposRepo;
 
     @PostMapping("/solicitudes/guardar")
     public String guardarSolicitud(@ModelAttribute Solicitud solicitud) {
@@ -28,13 +33,17 @@ public class SolicitudController {
     }
     // VER las solicitudes (Panel Admin)
     @GetMapping("/admin/solicitudes")
-    public String listarSolicitudes(Model model) {
-        // Buscamos todas las solicitudes en la DB
-       // Dentro del método que carga el index.html
-        List<Solicitud> lista = solicitudRepo.findAll();
-        model.addAttribute("solicitudes", lista);
-        return "admin-solicitudes";
-    }
+public String listarSolicitudes(Model model) {
+    model.addAttribute("solicitudes", solicitudRepo.findAll());
+    
+    // Añadimos los equipos para el bando
+    model.addAttribute("listaEquipos", equiposRepo.findAll());
+    // Añadimos las skins de la carpeta static
+    File carpetaSkins = new File("src/main/resources/static/images/skins/");
+    model.addAttribute("listaSkins", carpetaSkins.list());
+    
+    return "admin-solicitudes";
+}
     @PostMapping("/admin/solicitudes/actualizar")
     public String actualizarEstado(@RequestParam("id") Integer id, @RequestParam("estado") String estado) {
     // 1. Buscamos la solicitud por ID
