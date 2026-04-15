@@ -65,11 +65,28 @@ public String mostrarFormulario(Model model) {
 
     // GUARDAR TORNEO (Creación o Edición)
     @PostMapping("/torneos/guardar")
-    public String guardarTorneo(@ModelAttribute("torneo") Torneo torneo) {
-        // Guarda el objeto en la DB (Hibernate decide si es INSERT o UPDATE por el ID)
-        torneoRepo.save(torneo);
-        return "redirect:/torneos";
+public String guardarTorneo(@ModelAttribute("torneo") Torneo torneo) {
+    // Si estamos editando (id no es nulo)
+    if (torneo.getId() != null) {
+        Torneo torneoExistente = torneoRepo.findById(torneo.getId()).orElse(null);
+        if (torneoExistente != null) {
+            // Si en el formulario el banner viene vacío, recuperamos el anterior
+            if (torneo.getBannerUrl() == null || torneo.getBannerUrl().isEmpty()) {
+                torneo.setBannerUrl(torneoExistente.getBannerUrl());
+            }
+            // Mantenemos el estado actual si no queremos que cambie al editar
+            if (torneo.getEstado() == null) {
+                torneo.setEstado(torneoExistente.getEstado());
+            }
+        }
+    } else {
+        // Si es nuevo, le ponemos estado ABIERTO por defecto
+        torneo.setEstado("ABIERTO");
     }
+
+    torneoRepo.save(torneo);
+    return "redirect:/torneos";
+}
 
     // gestion de inscripciones manytomany
 
@@ -172,6 +189,23 @@ public String iniciarTorneo(@RequestParam("id") Integer id) {
         t.setEstado("EN CURSO"); // Cambia de ABIERTO a EN CURSO
         torneoRepo.save(t);
     });
+    return "redirect:/torneos";
+}
+@GetMapping("/torneos/editar/{id}")
+public String mostrarFormularioEditar(@PathVariable("id") Integer id, Model model) {
+    Torneo torneo = torneoRepo.findById(id).orElse(null);
+    if (torneo != null) {
+        model.addAttribute("torneo", torneo);
+        model.addAttribute("titulo", "Editar Torneo: " + torneo.getNombre());
+        
+        // --- COPIA ESTA LÓGICA DE 'NUEVO' PARA QUE EL SELECTOR NO SALGA VACÍO ---
+        File carpeta = new File("src/main/resources/static/images/banners/");
+        String[] archivos = carpeta.list();
+        if (archivos == null) { archivos = new String[0]; }
+        model.addAttribute("listaBanners", archivos);
+
+        return "torneos-form"; 
+    }
     return "redirect:/torneos";
 }
 }

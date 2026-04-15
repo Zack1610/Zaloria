@@ -57,7 +57,7 @@ CREATE TABLE resultado (
     FOREIGN KEY (id_mvp) REFERENCES jugador(id)
 );
 
-/* 6. Tabla de Solicitudes (Gremio / Comunidad) */
+/* 6. Tabla de Solicitudes */
 CREATE TABLE solicitudes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,

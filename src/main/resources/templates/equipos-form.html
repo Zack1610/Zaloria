@@ -39,6 +39,10 @@
                 <option th:each="logo : ${listaLogos}" th:value="${logo}" th:text="${logo}"></option>
                 </select>
                         </div>
+                        <div class="mb-3">
+            <label class="form-label text-info">Manager del Equipo:</label>
+            <input type="text" th:field="*{managers}" class="form-control bg-dark text-white border-info" placeholder="Nombre del Manager">
+            </div>
 
                     <div class="d-grid gap-2 mt-4">
                         <button type="submit" class="btn btn-cyan">FUNDAR EQUIPO</button>

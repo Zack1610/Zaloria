@@ -132,7 +132,7 @@
 
                 <section class="card card-gamer p-4 mb-4">
     <div class="card-header border-0 bg-transparent text-center">
-        <h2 class="cyan-text mt-2">🛡️ ÚNETE AL GREMIO DE ZALORIA</h2>
+        <h2 class="cyan-text mt-2">ÚNETE A LOS COLISEOS DE ZALORIA</h2>
         <p class="text-white-50 small">Envía tu perfil para ser reclutado por los mejores equipos</p>
     </div>
     
@@ -153,13 +153,6 @@
                 <label class="form-label text-info">Nickname / Gamertag:</label>
                 <input type="text" name="nickname" class="form-control bg-dark text-white border-secondary" placeholder="Ej: ZaloriaMaster_99" required>
             </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label text-info">Equipo de interés:</label>
-                <select class="form-select bg-dark text-white border-secondary">
-                    <option value="" selected disabled>-- Seleccionar (Opcional) --</option>
-                    <option th:each="e : ${listaEquipos}" th:value="${e.id}" th:text="${e.nombre}"></option>
-                </select>
-            </div>
         </div>
 
         <div class="mb-3">
@@ -168,7 +161,7 @@
         </div>
 
         <div class="text-center mt-3">
-            <button type="submit" class="btn btn-cyan w-100 fw-bold">ENVIAR MI SOLICITUD AL STAFF 🚀</button>
+            <button type="submit" class="btn btn-cyan w-100 fw-bold">ENVIAR MI SOLICITUD AL RECLUTAMIENTO</button>
         </div>
     </form>
 </section>

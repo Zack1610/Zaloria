@@ -24,6 +24,7 @@
                 <th>Nombre</th>
                 <th>Capitán</th>
                 <th>Coach</th>
+                <th>Manager</th>
             </tr>
         </thead>
         <tbody>
@@ -39,6 +40,7 @@
                 <td th:text="${equipo.nombre}" class="fw-bold"></td>
                 <td th:text="${equipo.capitan}"></td>
                 <td th:text="${equipo.entrenador}"></td>
+                <td class="text-info" th:text="${equipo.managers != null ? equipo.managers : 'Sin asignar'}"></td>
             </tr>
         </tbody>
     </table>

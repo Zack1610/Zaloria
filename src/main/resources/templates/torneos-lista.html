@@ -78,11 +78,14 @@
                                 <button type="submit" class="btn btn-sm btn-outline-warning">▶ Iniciar</button>
                             </form>
 
-                            <span th:if="${t.estado == 'EN CURSO'}" class="text-info small">Simulación pendiente...</span>
+                            <span th:if="${t.estado == 'EN CURSO'}" class="text-info small">En Curso...</span>
 
                             <a th:href="@{/torneos/eliminar/{id}(id=${t.id})}" 
                                class="btn btn-sm btn-outline-danger"
                                onclick="return confirm('¿Estás seguro de que quieres eliminar este torneo?')">Eliminar</a>
+
+                               <a th:href="@{/torneos/editar/{id}(id=${t.id})}" 
+                                    class="btn btn-sm btn-outline-primary ms-1">Editar</a>
                         </div>
                     </td>
                 </tr>

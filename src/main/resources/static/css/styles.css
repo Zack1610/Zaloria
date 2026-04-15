@@ -158,7 +158,7 @@ h3 {
 /* Contenedor flotante: Forzamos que no afecte al resto del HTML */
 .selector-tema-flotante {
     position: fixed !important; 
-    top: 20px !important;     
+    top: 650px !important;     
     left: 20px !important;   
     z-index: 9999 !important; /* El número más alto para que nada lo tape */
     display: flex;
