@@ -47,7 +47,7 @@
                     
                     <td>
                         <span class="badge" 
-                              th:classappend="${t.estado == 'ABIERTO' ? 'badge-abierto' : 'badge-curso'}"
+                              th:classappend="${t.estado == 'ABIERTO' ? 'badge-abierto' : (t.estado == 'EN CURSO' ? 'badge-curso' : 'bg-secondary')}"
                               th:text="${t.estado}">Estado</span>
                     </td>
                     
@@ -68,17 +68,22 @@
                     </td>
                     
                     <td class="text-center">
-                        <a th:if="${t.ganador == null}" 
-                           th:href="@{/torneos/inscribir/{id}(id=${t.id})}" 
-                           class="btn btn-sm btn-outline-info">Inscribir</a>
-                        
-                        <a th:if="${t.ganador == null}" 
-                           th:href="@{/torneos/finalizar/{id}(id=${t.id})}" 
-                           class="btn btn-sm btn-outline-warning ms-1">🏆 Finalizar</a>
+                        <div class="d-flex justify-content-center gap-1">
+                            <a th:if="${t.estado == 'ABIERTO'}" 
+                               th:href="@{/torneos/inscribir/{id}(id=${t.id})}" 
+                               class="btn btn-sm btn-outline-info">Inscribir</a>
+                            
+                            <form th:if="${t.estado == 'ABIERTO'}" th:action="@{/admin/torneos/iniciar}" method="post" style="display:inline;">
+                                <input type="hidden" name="id" th:value="${t.id}">
+                                <button type="submit" class="btn btn-sm btn-outline-warning">▶ Iniciar</button>
+                            </form>
 
-                        <a th:href="@{/torneos/eliminar/{id}(id=${t.id})}" 
-                           class="btn btn-sm btn-outline-danger ms-1"
-                           onclick="return confirm('¿Estás seguro de que quieres eliminar este torneo?')">Eliminar</a>
+                            <span th:if="${t.estado == 'EN CURSO'}" class="text-info small">Simulación pendiente...</span>
+
+                            <a th:href="@{/torneos/eliminar/{id}(id=${t.id})}" 
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('¿Estás seguro de que quieres eliminar este torneo?')">Eliminar</a>
+                        </div>
                     </td>
                 </tr>
             </tbody>

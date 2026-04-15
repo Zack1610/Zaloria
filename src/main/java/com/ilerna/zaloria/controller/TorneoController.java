@@ -166,4 +166,12 @@ public String mostrarFormulario(Model model) {
         }
         return "redirect:/torneos";
     }
+    @PostMapping("/admin/torneos/iniciar")
+public String iniciarTorneo(@RequestParam("id") Integer id) {
+    torneoRepo.findById(id).ifPresent(t -> {
+        t.setEstado("EN CURSO"); // Cambia de ABIERTO a EN CURSO
+        torneoRepo.save(t);
+    });
+    return "redirect:/torneos";
+}
 }
