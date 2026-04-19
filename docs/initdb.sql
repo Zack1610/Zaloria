@@ -6,10 +6,12 @@ CREATE TABLE torneo (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     fecha DATETIME,
-    premio VARCHAR(100),
+    premio DOUBLE,
     max_equipos INT,
+    estado VARCHAR(50), -- ABIERTO, EN CURSO, FINALIZADO
     banner_url VARCHAR(255),
-    estado ENUM('ABIERTO', 'CERRADO') DEFAULT 'ABIERTO'
+    ganador_id INT,
+    FOREIGN KEY (ganador_id) REFERENCES equipo(id)
 );
 
 /* 2. Tabla de Equipo */
@@ -25,21 +27,20 @@ CREATE TABLE equipo (
 /* 3. Tabla de Jugador */
 CREATE TABLE jugador (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nickname VARCHAR(50) NOT NULL,
+    nickname VARCHAR(100) NOT NULL,
     email VARCHAR(100),
     skin_url VARCHAR(255),
     id_equipo INT,
-    CONSTRAINT fk_jugador_equipo FOREIGN KEY (id_equipo) REFERENCES equipo(id) ON DELETE SET NULL
+    FOREIGN KEY (id_equipo) REFERENCES equipo(id)
 );
 
 /* 4. Tabla de Inscripción (Intermedia) */
 CREATE TABLE inscripcion (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_torneo INT,
-    id_equipo INT,
-    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_torneo) REFERENCES torneo(id),
-    FOREIGN KEY (id_equipo) REFERENCES equipo(id)
+    torneo_id INT NOT NULL,
+    equipo_id INT NOT NULL,
+    PRIMARY KEY (torneo_id, equipo_id),
+    FOREIGN KEY (torneo_id) REFERENCES torneo(id),
+    FOREIGN KEY (equipo_id) REFERENCES equipo(id)
 );
 
 /* 5. Tabla de Resultado (Relación 1:1 con Torneo) */
@@ -51,7 +52,7 @@ CREATE TABLE resultado (
     eliminaciones INT DEFAULT 0,
     puntos_posicion INT DEFAULT 0,
     puntos_totales INT DEFAULT 0,
-    puntuacion VARCHAR(50),
+    puntuacion VARCHAR(50), -- Ejemplo: "95 PTS"
     FOREIGN KEY (id_torneo) REFERENCES torneo(id),
     FOREIGN KEY (equipo_ganador_id) REFERENCES equipo(id),
     FOREIGN KEY (id_mvp) REFERENCES jugador(id)
@@ -60,10 +61,10 @@ CREATE TABLE resultado (
 /* 6. Tabla de Solicitudes */
 CREATE TABLE solicitudes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    nickname VARCHAR(50) NOT NULL,
-    email VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100),
+    nickname VARCHAR(100),
+    email VARCHAR(100),
     fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     motivo TEXT,
-    estado ENUM('PENDIENTE', 'ACEPTADA', 'RECHAZADA') DEFAULT 'PENDIENTE'
+    estado VARCHAR(50) DEFAULT 'PENDIENTE' -- PENDIENTE, ACEPTADA, RECHAZADA
 );

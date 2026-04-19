@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 /**
@@ -183,12 +185,20 @@ public String guardarTorneo(@ModelAttribute("torneo") Torneo torneo) {
         }
         return "redirect:/torneos";
     }
-    @PostMapping("/admin/torneos/iniciar")
-public String iniciarTorneo(@RequestParam("id") Integer id) {
-    torneoRepo.findById(id).ifPresent(t -> {
-        t.setEstado("EN CURSO"); // Cambia de ABIERTO a EN CURSO
-        torneoRepo.save(t);
-    });
+   @PostMapping("/admin/torneos/iniciar")
+public String iniciarTorneo(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
+    Torneo torneo = torneoRepo.findById(id).orElse(null);
+    
+    if (torneo != null) {
+        // SEGURIDAD: Validamos que haya al menos 2 equipos antes de ponerlo "EN CURSO"
+        if (torneo.getEquipos() == null || torneo.getEquipos().size() < 2) {
+            redirectAttributes.addFlashAttribute("errorTorneo", "⚠️ No puedes iniciar '" + torneo.getNombre() + "' sin al menos 2 equipos inscritos.");
+            return "redirect:/torneos";
+        }
+        
+        torneo.setEstado("EN CURSO");
+        torneoRepo.save(torneo);
+    }
     return "redirect:/torneos";
 }
 @GetMapping("/torneos/editar/{id}")
