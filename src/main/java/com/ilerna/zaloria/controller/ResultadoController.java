@@ -24,74 +24,63 @@ import java.util.List;
 
 @Controller
 public class ResultadoController {
-   @Autowired
-    private ResultadoRepository resultadoRepo;
-
-    @Autowired
-    private TorneoRepository torneoRepo;
-
-    @Autowired
-    private EquiposRepository equiposRepo;
-
-    @Autowired
-    private JugadorRepository jugadorRepo;
+   @Autowired private ResultadoRepository resultadoRepo; // Para guardar los datos finales
+    @Autowired private TorneoRepository torneoRepo; // Para buscar y actualizar torneos
+    @Autowired private EquiposRepository equiposRepo; // Acceso a la tabla equipos
+    @Autowired private JugadorRepository jugadorRepo; // Acceso a la tabla jugadores
 
     @GetMapping("/admin/resultados/nuevo")
     public String mostrarSimulador(Model model) {
-        // Solo mostramos torneos que no estén FINALIZADOS para simular
+        // Carga la lista de torneos disponibles para ser simulados
         model.addAttribute("torneos", torneoRepo.findAll());
         return "admin-simulador";
     }
 
-   @PostMapping("/admin/resultados/simular")
-public String simularResultado(@RequestParam("torneoId") Integer torneoId, RedirectAttributes redirectAttributes) {
-    // 1. Buscamos el torneo
-    Torneo torneo = torneoRepo.findById(torneoId).orElse(null);
-    Random random = new Random();
+    @PostMapping("/admin/resultados/simular")
+    public String simularResultado(@RequestParam("torneoId") Integer torneoId, RedirectAttributes redirectAttributes) {
+        Torneo torneo = torneoRepo.findById(torneoId).orElse(null); // Busca el torneo por ID
+        Random random = new Random(); // Clase para generar valores aleatorios
 
-    if (torneo != null) {
-        // 2. SEGURIDAD: Verificar si hay al menos 2 equipos inscritos
-        if (torneo.getEquipos() == null || torneo.getEquipos().size() < 2) {
-            redirectAttributes.addFlashAttribute("error", "⚠️ No se puede simular: El torneo necesita al menos 2 equipos inscritos.");
-            return "redirect:/admin/resultados/nuevo";
+        if (torneo != null) {
+            // ESCUDO DE SEGURIDAD: Valida que existan al menos 2 equipos para competir
+            if (torneo.getEquipos() == null || torneo.getEquipos().size() < 2) {
+                redirectAttributes.addFlashAttribute("error", "⚠️ No se puede simular: Faltan equipos.");
+                return "redirect:/admin/resultados/nuevo"; // Detiene la ejecución si hay error
+            }
+
+            Resultado res = new Resultado(); // Crea el registro de estadísticas
+            res.setTorneo(torneo);
+            
+            // ELIGE GANADOR: Solo de la lista de equipos inscritos en ese torneo
+            List<Equipos> participantes = torneo.getEquipos();
+            res.setEquipoGanador(participantes.get(random.nextInt(participantes.size())));
+
+            // ELIGE MVP: Selecciona un jugador aleatorio de toda la base de datos
+            List<Jugador> todosLosJugadores = jugadorRepo.findAll();
+            if (!todosLosJugadores.isEmpty()) {
+                res.setMvp(todosLosJugadores.get(random.nextInt(todosLosJugadores.size())));
+            }
+
+            // GENERACIÓN DE STATS: Calcula bajas, puntos y suma el total
+            res.setEliminaciones(random.nextInt(30) + 10); 
+            res.setPuntosPosicion(random.nextInt(50) + 20); 
+            res.setPuntosTotales(res.getEliminaciones() + res.getPuntosPosicion());
+            res.setPuntuacion(res.getPuntosTotales() + " PTS");
+
+            resultadoRepo.save(res); // Guarda las estadísticas en la base de datos
+
+            // ACTUALIZA TORNEO: Cambia el estado a FINALIZADO y asigna al campeón
+            torneo.setEstado("FINALIZADO");
+            torneo.setGanador(res.getEquipoGanador());
+            torneoRepo.save(torneo); // Registra el fin del torneo en la DB
         }
-
-        // 3. Crear el objeto Resultado
-        Resultado res = new Resultado();
-        res.setTorneo(torneo);
-        
-        // 4. Elegir Equipo Ganador de la lista de inscritos (¡No de todos los equipos de la DB!)
-        List<Equipos> participantes = torneo.getEquipos();
-        res.setEquipoGanador(participantes.get(random.nextInt(participantes.size())));
-
-        // 5. Elegir MVP aleatorio (de la base de datos general)
-        List<Jugador> todosLosJugadores = jugadorRepo.findAll();
-        if (!todosLosJugadores.isEmpty()) {
-            res.setMvp(todosLosJugadores.get(random.nextInt(todosLosJugadores.size())));
-        }
-
-        // 6. Generar estadísticas aleatorias
-        res.setEliminaciones(random.nextInt(30) + 10); 
-        res.setPuntosPosicion(random.nextInt(50) + 20); 
-        res.setPuntosTotales(res.getEliminaciones() + res.getPuntosPosicion());
-        res.setPuntuacion(res.getPuntosTotales() + " PTS");
-
-        // 7. Guardar resultado
-        resultadoRepo.save(res);
-
-        // 8. Actualizar el estado del Torneo a FINALIZADO y ponerle su ganador
-        torneo.setEstado("FINALIZADO");
-        torneo.setGanador(res.getEquipoGanador());
-        torneoRepo.save(torneo);
+        return "redirect:/admin/resultados"; // Envía a la lista de resultados históricos
     }
     
-    return "redirect:/admin/resultados";
-}
-    
     @GetMapping("/admin/resultados")
-public String listarResultados(Model model) {
-    // Buscamos todos los resultados guardados en la base de datos
-    model.addAttribute("listaResultados", resultadoRepo.findAll());
-    return "admin-resultados-lista"; // Este será el nombre del nuevo HTML
-}
+    public String listarResultados(Model model) {
+        // Recupera todo el historial para mostrarlo en el panel de administrador
+        model.addAttribute("listaResultados", resultadoRepo.findAll());
+        return "admin-resultados-lista";
+    }
 }

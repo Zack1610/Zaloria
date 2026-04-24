@@ -21,6 +21,9 @@ public class Equipos {
     @Column(name = "logo_url")
     private String logoUrl; // Atributo para el logo del equipo
 
+@Column(name = "max_jugadores")
+private Integer maxJugadores; // Nuevo atributo para el número máximo de jugadores
+
     // Constructor vacío (Obligatorio)
     public Equipos() {
     }
@@ -72,5 +75,13 @@ public class Equipos {
 
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
+    }
+
+    public Integer getMaxJugadores() {
+    return maxJugadores;
+    }
+
+    public void setMaxJugadores(Integer maxJugadores) {
+    this.maxJugadores = maxJugadores;
     }
 }

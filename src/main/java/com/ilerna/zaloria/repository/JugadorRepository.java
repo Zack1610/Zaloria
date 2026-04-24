@@ -4,6 +4,7 @@
  */
 package com.ilerna.zaloria.repository;
 
+import com.ilerna.zaloria.model.Equipos;
 import com.ilerna.zaloria.model.Jugador;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JugadorRepository extends JpaRepository<Jugador, Integer> {
+    // Spring creará la consulta SQL automáticamente: SELECT COUNT(*) FROM jugador WHERE equipo_id = ?
+    long countByEquipo(Equipos equipo);
 }

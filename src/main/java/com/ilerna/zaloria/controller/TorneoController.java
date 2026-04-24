@@ -48,18 +48,18 @@ public class TorneoController {
 public String mostrarFormulario(Model model) {
     model.addAttribute("torneo", new Torneo());
     
-    // 1. Ruta a la carpeta física
+    // Ruta a la carpeta física
     File carpeta = new File("src/main/resources/static/images/banners/");
     
-    // 2. Obtener lista de archivos
+    // Obtener lista de archivos
     String[] archivos = carpeta.list();
     
-    // 3. Seguridad: Si la carpeta no existe o está vacía, enviamos lista vacía
+    // Seguridad: Si la carpeta no existe o está vacía, enviamos lista vacía
     if (archivos == null) {
         archivos = new String[0];
     }
     
-    // 4. EL NOMBRE CLAVE: debe ser "listaBanners"
+    // EL NOMBRE CLAVE: debe ser "listaBanners"
     model.addAttribute("listaBanners", archivos);
     
     return "torneos-form";
@@ -185,37 +185,45 @@ public String guardarTorneo(@ModelAttribute("torneo") Torneo torneo) {
         }
         return "redirect:/torneos";
     }
-   @PostMapping("/admin/torneos/iniciar")
+  // MÉTODO PARA INICIAR EL TORNEO
+@PostMapping("/admin/torneos/iniciar")
 public String iniciarTorneo(@RequestParam("id") Integer id, RedirectAttributes redirectAttributes) {
+    // Busca el torneo por su ID en la base de datos
     Torneo torneo = torneoRepo.findById(id).orElse(null);
     
     if (torneo != null) {
-        // SEGURIDAD: Validamos que haya al menos 2 equipos antes de ponerlo "EN CURSO"
+        // ESCUDO DE SEGURIDAD: Comprueba que la lista de equipos inscritos tenga al menos 2 elementos
         if (torneo.getEquipos() == null || torneo.getEquipos().size() < 2) {
+            // Envía un mensaje de error que aparecerá solo una vez en la pantalla (FlashAttribute)
             redirectAttributes.addFlashAttribute("errorTorneo", "⚠️ No puedes iniciar '" + torneo.getNombre() + "' sin al menos 2 equipos inscritos.");
-            return "redirect:/torneos";
+            return "redirect:/torneos"; // Detiene el proceso y recarga la lista
         }
         
+        // Cambia el estado a 'EN CURSO' para que el simulador pueda detectarlo
         torneo.setEstado("EN CURSO");
-        torneoRepo.save(torneo);
+        torneoRepo.save(torneo); // Guarda el cambio de estado en MySQL
     }
     return "redirect:/torneos";
 }
+
+// MÉTODO PARA EDITAR UN TORNEO EXISTENTE
 @GetMapping("/torneos/editar/{id}")
 public String mostrarFormularioEditar(@PathVariable("id") Integer id, Model model) {
+    // @PathVariable: Captura el ID directamente desde la URL (ej: /editar/5)
     Torneo torneo = torneoRepo.findById(id).orElse(null);
+    
     if (torneo != null) {
-        model.addAttribute("torneo", torneo);
+        model.addAttribute("torneo", torneo); // Envía los datos actuales del torneo al formulario
         model.addAttribute("titulo", "Editar Torneo: " + torneo.getNombre());
         
-        // --- COPIA ESTA LÓGICA DE 'NUEVO' PARA QUE EL SELECTOR NO SALGA VACÍO ---
+        // Lógica de Banners: Lee la carpeta física para que el usuario pueda cambiar la imagen
         File carpeta = new File("src/main/resources/static/images/banners/");
         String[] archivos = carpeta.list();
         if (archivos == null) { archivos = new String[0]; }
-        model.addAttribute("listaBanners", archivos);
+        model.addAttribute("listaBanners", archivos); // Carga el selector de imágenes
 
-        return "torneos-form"; 
+        return "torneos-form"; // Reutiliza el mismo HTML de creación para editar
     }
     return "redirect:/torneos";
-}
+ }
 }
