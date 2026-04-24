@@ -1,3 +1,4 @@
+<!-- PÁGINA DE PARTICIPANTES DEL TORNEO - Muestra los equipos inscritos en un torneo -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,34 +11,43 @@
 <body>
 
     <header>
-        <div th:replace="~{layout :: boton-tema}"></div>
+        <div th:replace="~{layout :: boton-tema(true)}"></div>
     </header>
 
     <main class="container">
 
+        <!-- Título del torneo y navegación -->
         <section class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
             <div>
+                <!-- Encabezado de equipos inscritos -->
                 <h2 class="cyan-text mb-1">Equipos Inscritos</h2>
+                <!-- Nombre del torneo actual -->
                 <h5 class="cyan-text" th:text="${torneo.nombre}">Nombre del Torneo</h5>
             </div>
 
+            <!-- Botón para volver a lista de torneos -->
             <nav>
                 <a href="/torneos" class="btn btn-outline-info">Volver a Torneos</a>
             </nav>
         </section>
 
+        <!-- Filas de equipos participantes -->
         <section class="row mt-4">
 
+            <!-- Tarjeta de equipo inscrito: itera sobre cada equipo del torneo -->
             <article class="col-md-6" th:each="e : ${torneo.equipos}">
                 <div class="card equipo-card p-3 shadow-sm">
 
                     <div class="d-flex justify-content-between align-items-center">
 
                         <div>
+                            <!-- Nombre del equipo -->
                             <h5 class="mb-0 fw-bold cyan-text" th:text="${e.nombre}">Nombre del Equipo</h5>
+                            <!-- Estado de inscripción -->
                             <small class="text-info">Inscripción confirmada</small>
                         </div>
 
+                        <!-- Formulario para retirar equipo del torneo -->
                         <form th:action="@{/torneos/desvincular}" method="post">
                             <input type="hidden" name="torneoId" th:value="${torneo.id}">
                             <input type="hidden" name="equipoId" th:value="${e.id}">
@@ -53,6 +63,7 @@
                 </div>
             </article>
 
+            <!-- Mensaje cuando no hay equipos inscritos -->
             <section class="col-12 text-center py-5" th:if="${#lists.isEmpty(torneo.equipos)}">
                 <h3 class="text-white">No hay valientes apuntados todavía...</h3>
                 <p>¡Ve a la lista y empieza a inscribir equipos!</p>

@@ -1,46 +1,34 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<body>
+<div th:fragment="boton-tema(mostrarSalir)" class="selector-tema-flotante">
+    
+    <button id="theme-toggle" class="btn btn-outline-info">
+        🌙 Modo Oscuro
+    </button>
 
-    <div th:fragment="boton-tema" class="selector-tema-flotante">
-        
-        <button id="theme-toggle" class="btn btn-outline-info">
-            🌙 Modo Oscuro
-        </button>
+    <div class="mt-2" th:if="${mostrarSalir}">
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-danger w-100">Salir</button>
+    </form>
+</div>
 
-        <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" class="mt-2">
-            <button type="submit" class="btn btn-danger w-100">
-                 Salir
-            </button>
-        </form>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const themeBtn = document.getElementById('theme-toggle');
-                const htmlElement = document.documentElement;
-
-                if (themeBtn) {
-                    const savedTheme = localStorage.getItem('theme') || 'dark';
-                    htmlElement.setAttribute('data-theme', savedTheme);
-                    
-                    const actualizarBoton = (theme) => {
-                        themeBtn.innerHTML = (theme === 'light') ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
-                    };
-
-                    actualizarBoton(savedTheme);
-
-                    themeBtn.addEventListener('click', () => {
-                        const currentTheme = htmlElement.getAttribute('data-theme');
-                        const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
-                        
-                        htmlElement.setAttribute('data-theme', newTheme);
-                        localStorage.setItem('theme', newTheme);
-                        actualizarBoton(newTheme);
-                    });
-                }
-            });
-        </script>
-    </div>
-
-</body>
-</html>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeBtn = document.getElementById('theme-toggle');
+            const htmlElement = document.documentElement;
+            if (themeBtn) {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                htmlElement.setAttribute('data-theme', savedTheme);
+                const actualizarBoton = (theme) => {
+                    themeBtn.innerHTML = (theme === 'light') ? '☀️ Modo Claro' : '🌙 Modo Oscuro';
+                };
+                actualizarBoton(savedTheme);
+                themeBtn.addEventListener('click', () => {
+                    const currentTheme = htmlElement.getAttribute('data-theme');
+                    const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+                    htmlElement.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    actualizarBoton(newTheme);
+                });
+            }
+        });
+    </script>
+</div>

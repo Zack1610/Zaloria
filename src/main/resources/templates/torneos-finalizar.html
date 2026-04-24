@@ -1,3 +1,4 @@
+<!-- PÁGINA DE FINALIZACIÓN DE TORNEO - Permite seleccionar el equipo ganador final -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,35 +11,44 @@
 <body>
 
     <header>
-        <div th:replace="~{layout :: boton-tema}"></div>
+        <div th:replace="~{layout :: boton-tema(true)}"></div>
     </header>
 
+    <!-- Contenido principal con la selección de ganador -->
     <main class="container py-5">
 
+        <!-- Tarjeta de la Gran Final -->
         <section class="card card-final p-4 mx-auto shadow-lg border-warning"
                  style="max-width: 500px; background-color: #1a1a1a;">
 
             <article>
 
+                <!-- Banner del torneo -->
                 <div class="mb-3">
                     <img th:src="@{'/images/banners/' + ${torneo.bannerUrl != null ? torneo.bannerUrl : 'default_banner.jpg'}}"
                          class="img-fluid rounded border border-warning"
                          alt="Banner Final">
                 </div>
 
+                <!-- Título de Gran Final -->
                 <h2 class="text-warning text-center">Gran Final</h2>
 
+                <!-- Nombre del torneo -->
                 <p class="text-center text-white">
                     Torneo: <strong th:text="${torneo.nombre}"></strong>
                 </p>
 
+                <!-- Formulario para seleccionar ganador -->
                 <form th:action="@{/torneos/guardar-ganador}" method="post">
 
+                    <!-- ID del torneo (oculto) -->
                     <input type="hidden" name="torneoId" th:value="${torneo.id}">
 
+                    <!-- Campo: Selección del equipo ganador -->
                     <div class="mb-4">
                         <label class="form-label text-warning">Elige al Equipo Ganador:</label>
 
+                        <!-- Dropdown de equipos participantes -->
                         <select name="equipoId"
                                 class="form-select bg-dark text-white border-secondary"
                                 required>

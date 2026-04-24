@@ -5,32 +5,28 @@
     --bg-principal: #121212;
     --bg-card: #1e1e1e;
     --texto-base: #e0e0e0;
-    --cian-zaloria: #00bcd4; /* Añadimos esta */
+    --cian-zaloria: #00bcd4;
     --bg-input: #2a2a2a;
 }
 
-/* Colores para el Modo Claro */
 [data-theme="light"] {
     --bg-principal: #ffffff;
     --bg-card: #f8f9fa;
     --texto-base: #212529;
-    --cian-zaloria: #008ba3; /* Un azul más oscuro para que se vea en blanco */
+    --cian-zaloria: #008ba3;
     --bg-input: #ffffff;
 }
 
-/* Aplicación de variables */
 body { 
     background-color: var(--bg-principal) !important; 
     color: var(--texto-base) !important; 
     transition: background-color 0.3s ease, color 0.3s ease;
+    /*overflow-x: hidden;  Evita que el body se mueva de lado */
 }
 
-.card-gamer, .equipo-card, .table-gamer, .card-final { 
-    background-color: var(--bg-card) !important; 
-    color: var(--texto-base) !important;
-}
-
-/* BOTONES USANDO LA VARIABLE */
+/* =========================================
+   2. BOTONES Y ELEMENTOS UI
+   ========================================= */
 .btn-cyan, .btn-gamer {
     background-color: var(--cian-zaloria) !important;
     border-color: var(--cian-zaloria) !important;
@@ -38,15 +34,14 @@ body {
 }
 
 [data-theme="light"] .btn-gamer {
-    background-color: #f0f0f0 !important; /* Gris muy clarito para que se vea el botón */
+    background-color: #f0f0f0 !important;
     color: var(--cian-zaloria) !important;
 }
 
 .btn-cyan:hover, .btn-gamer:hover {
-    background-color: var(--cian-hover);
-    color: white;
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
     transform: translateY(-2px);
+    color: white !important;
 }
 
 /* =========================================
@@ -72,38 +67,65 @@ label, .form-label {
     outline: none;
 }
 
-/* Parche para el autocompletado blanco de Chrome */
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus {
+input:-webkit-autofill {
     -webkit-text-fill-color: white !important;
     -webkit-box-shadow: 0 0 0px 1000px var(--bg-input) inset !important;
-    transition: background-color 5000s ease-in-out 0s;
 }
 
 /* =========================================
-   4. TABLAS Y TARJETAS
+   4. TABLAS Y TARJETAS (ARREGLADO PARA SCROLL)
    ========================================= */
+
+/* Contenedor principal que permite el scroll horizontal */
 .card-gamer {
     background-color: var(--bg-card);
     border: 1px solid var(--cian-zaloria);
     box-shadow: 0 0 15px rgba(0, 188, 212, 0.2);
-}
-
-.table-gamer {
-    background-color: var(--bg-card);
     border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,255,255,0.1);
+    
+    /* Configuración de scroll */
+    width: 100% !important;
+    overflow-x: auto !important; 
+    display: block !important;
+    -webkit-overflow-scrolling: touch;
 }
 
-.table-gamer thead {
-    background-color: var(--cian-zaloria);
-    color: black;
+/* Forzamos a la tabla a ser más ancha que el móvil para que aparezca el scroll */
+.card-gamer table {
+    min-width: 850px !important; 
+    width: 100%;
+    margin-bottom: 15px !important;
 }
 
-.table-gamer tbody tr:hover {
-    background-color: #2a2a2a;
+/* Evitamos que el texto se amontone en celdas pequeñas */
+.card-gamer th, .card-gamer td {
+    white-space: nowrap !important;
+    padding: 12px 15px !important;
+    vertical-align: middle;
+}
+
+/* 1. Tamaño de la barra (horizontal) */
+.card-gamer::-webkit-scrollbar {
+    height: 8px; /* Un poco más gruesa para que se vea bien */
+    background-color: #121212; /* Fondo oscuro para que no resalte el carril */
+}
+
+/* 2. El "Thumb" (la parte que se mueve, la que pusiste en la foto) */
+.card-gamer::-webkit-scrollbar-thumb {
+    background: var(--cian-zaloria) !important; /* Usamos tu Cyan */
+    border-radius: 10px; /* Bordes redondeados para estilo moderno */
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.5); /* Un pequeño brillo */
+}
+
+/* 3. El "Track" (el camino por donde va la barra) */
+.card-gamer::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 10px;
+}
+
+/* 4. Efecto cuando pasas el mouse por encima */
+.card-gamer::-webkit-scrollbar-thumb:hover {
+    background: #00e5ff !important; /* Un cyan más brillante al tocarlo */
 }
 
 .cyan-text {
@@ -114,26 +136,12 @@ input:-webkit-autofill:focus {
 /* =========================================
    5. SECCIONES ESPECÍFICAS
    ========================================= */
-
-/* Pantalla de Inicio / Logo */
 .logo-principal {
     max-width: 600px;
     filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.3));
     margin-bottom: 30px;
 }
 
-/* Pantalla de Finalización (Coronación) */
-.card-final {
-    background-color: var(--bg-card);
-    border: 2px solid var(--oro);
-    border-radius: 10px;
-}
-
-h3 {
-    color: white !important;
-}
-
-/* Tarjetas de Equipos */
 .equipo-card { 
     background-color: var(--bg-card); 
     border-left: 5px solid var(--cian-zaloria); 
@@ -147,35 +155,56 @@ h3 {
     box-shadow: 0 5px 15px rgba(0,188,212,0.3); 
 }
 
-/* Badges de Estado */
 .badge-abierto { background-color: var(--cian-zaloria); color: black; }
 .badge-curso { background-color: #ffc107; color: black; }
 
 /* =========================================
-   BOTÓN DE CAMBIO DE TEMA Y LOGOUT
+   6. COMPONENTES FLOTANTES
    ========================================= */
-
-/* Contenedor flotante: Forzamos que no afecte al resto del HTML */
 .selector-tema-flotante {
     position: fixed !important; 
-    top: 650px !important;     
-    left: 20px !important;   
-    z-index: 9999 !important; /* El número más alto para que nada lo tape */
+    z-index: 9999 !important;
     display: flex;
-    flex-direction: column;   /* Uno debajo del otro */
-    gap: 10px;                /* Espacio entre botones */
-    width: auto !important;   /* Que no ocupe todo el ancho de la pantalla */
+    flex-direction: column;
+    gap: 10px;
 }
 
-.selector-tema-flotante .btn {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    border-radius: 50px; 
-    padding: 8px 20px;
-    white-space: nowrap;      /* Evita que el texto se parta en dos líneas */
-    font-size: 0.9rem;
+/* --- VISTA PARA PC --- */
+@media (min-width: 768px) {
+    .selector-tema-flotante {
+        top: 600px !important;     
+        left: 20px !important;   
+    }
 }
 
-/* Fix para que el contenido de la web no se desplace */
-body {
-    overflow-x: hidden; /* Evita el scroll lateral si algo sobresale */
+/* --- VISTA PARA MÓVILES (Aquí está el arreglo) --- */
+@media (max-width: 767px) {
+    .selector-tema-flotante {
+        position: relative !important; /* Deja de flotar sobre los botones */
+        top: 0 !important;
+        left: 0 !important;
+        margin: 20px auto !important; /* Se centra */
+        align-items: center;
+        flex-direction: row; /* Los pone uno al lado del otro */
+        justify-content: center;
+        width: 100% !important;
+    }
+    
+    .selector-tema-flotante .btn {
+        font-size: 0.8rem; /* Un poco más pequeños para que quepan */
+        padding: 5px 15px;
+    }
+}
+
+/* Fuerza la aparición de la barra personalizada */
+.card-gamer::-webkit-scrollbar {
+    display: block !important;
+    height: 10px !important; 
+    background: #121212 !important;
+}
+
+.card-gamer::-webkit-scrollbar-thumb {
+    background-color: var(--cian-zaloria) !important;
+    border: 2px solid #121212 !important; /* Añadir un borde ayuda a que el navegador lo dibuje mejor */
+    border-radius: 10px !important;
 }

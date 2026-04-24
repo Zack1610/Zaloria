@@ -1,3 +1,4 @@
+<!-- FORMULARIO DE CREACIÓN/EDICIÓN DE EQUIPOS - Permite crear un nuevo equipo o editar uno existente -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,7 +11,7 @@
 <body>
 
     <header>
-        <div th:replace="~{layout :: boton-tema}"></div>
+        <div th:replace="~{layout :: boton-tema(true)}"></div>
     </header>
 
     <main class="container py-5">
@@ -20,27 +21,34 @@
 
                 <article class="card card-gamer p-4 shadow-lg">
 
+                    <!-- Título del formulario -->
                     <h2 class="text-center mb-4" style="color: #00bcd4;">️Crear Equipo</h2>
 
+                    <!-- Formulario para guardar o actualizar datos del equipo -->
                     <form th:action="@{/equipos/guardar}" th:object="${equipo}" method="post">
 
+                        <!-- Campo ID oculto: se usa para edición de equipos existentes -->
                         <input type="hidden" th:field="*{id}">
 
+                        <!-- Campo: Nombre del Equipo -->
                         <div class="mb-3">
                             <label class="form-label">Nombre del Clan/Equipo:</label>
                             <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ej: Zaloria Dragons" required>
                         </div>
 
+                        <!-- Campo: Capitán del Equipo -->
                         <div class="mb-3">
                             <label class="form-label">Capitán:</label>
                             <input type="text" th:field="*{capitan}" class="form-control" placeholder="Nombre del capitán">
                         </div>
 
+                        <!-- Campo: Entrenador/Coach del Equipo -->
                         <div class="mb-3">
                             <label class="form-label">Entrenador:</label>
                             <input type="text" th:field="*{entrenador}" class="form-control" placeholder="Nombre del coach">
                         </div>
 
+                        <!-- Campo: Selección del logo del equipo -->
                         <div class="mb-3">
                             <label class="form-label">Selecciona el Logo:</label>
                             <select th:field="*{logoUrl}" class="form-select bg-dark text-white border-secondary">
@@ -49,11 +57,13 @@
                             </select>
                         </div>
 
+                        <!-- Campo: Manager del Equipo -->
                         <div class="mb-3">
                             <label class="form-label text-info">Manager del Equipo:</label>
                             <input type="text" th:field="*{managers}" class="form-control bg-dark text-white border-info" placeholder="Nombre del Manager">
                         </div>
 
+                        <!-- Campo: Número máximo de jugadores permitidos -->
                         <div class="mb-3">
                             <label class="form-label">Máximo de Jugadores:</label>
                             <input type="number" th:field="*{maxJugadores}" class="form-control bg-dark text-white border-secondary" min="1" max="20" required>

@@ -1,3 +1,4 @@
+<!-- SIMULADOR DE RESULTADOS - Genera automáticamente resultados finales para torneos en curso -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,7 +11,7 @@
 <body class="bg-dark text-white">
 
     <header>
-        <div th:replace="~{layout :: boton-tema}"></div>
+        <div th:replace="~{layout :: boton-tema(true)}"></div>
     </header>
 
     <main class="container my-5">
@@ -20,21 +21,27 @@
 
                 <article class="card card-gamer p-5 shadow-lg border-info">
 
+                    <!-- Título del simulador -->
                     <h2 class="cyan-text mb-4 text-center">Centro de Simulación de Resultados</h2>
 
+                    <!-- Descripción de la funcionalidad -->
                     <p class="text-white-50 text-center mb-5">
                         Selecciona un torneo activo para generar las estadísticas finales de forma aleatoria.
                     </p>
 
+                    <!-- Mensaje de error si existe -->
                     <div th:if="${error}" class="alert alert-danger bg-dark text-danger border-danger mb-4 shadow-sm">
                         <strong th:text="${error}"></strong>
                     </div>
 
+                    <!-- Formulario para iniciar simulación -->
                     <form th:action="@{/admin/resultados/simular}" method="post">
 
+                        <!-- Campo: Selección del torneo a simular -->
                         <div class="mb-4">
                             <label class="form-label text-info fw-bold">🏆 Torneo Disponible:</label>
 
+                            <!-- Solo muestra torneos en estado 'EN CURSO' -->
                             <select name="torneoId" class="form-select bg-dark text-white border-info" required>
                                 <option value="">-- Elige un Torneo para finalizar --</option>
                                 <option th:each="t : ${torneos}"

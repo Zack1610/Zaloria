@@ -1,3 +1,4 @@
+<!-- PÁGINA PÚBLICA: HALL OF FAME - Muestra ranking de campeones y MVPs de Zaloria -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -9,28 +10,30 @@
 
 <body>
     <header>
-        <div th:replace="~{layout :: boton-tema}"></div>
+        <div th:replace="~{layout :: boton-tema(true)}"></div>
     </header>
 
     <main class="container my-5">
 
-        <!-- TÍTULO PRINCIPAL -->
+        <!-- TÍTULO PRINCIPAL: Hall of Fame con ranking de campeones -->
         <section class="text-center mb-5">
             <h1 class="display-4 fw-bold cyan-text">🏆 HALL OF FAME</h1>
             <p class="text-info">Historial de Campeones y MVP de Zaloria eSports</p>
             <hr class="border-info opacity-50">
         </section>
 
-        <!-- TOP TEAMS -->
+        <!-- SECCIÓN: TOP 3 EQUIPOS CON MÁS VICTORIAS -->
         <section class="row mb-5 justify-content-center">
             <header class="col-12 text-center mb-4">
                 <h2 class="text-warning h3">👑 TOP TEAMS 👑</h2>
             </header>
 
+            <!-- Tarjeta de equipo: muestra top 3 (oro, plata, bronce) -->
             <article class="col-md-3 text-center"
                      th:each="rank, iter : ${ranking}"
                      th:if="${iter.index < 3}">
                 <div class="card bg-black border-info p-3 mb-3 shadow">
+                    <!-- Emoji de medalla según posición: 1º oro, 2º plata, 3º bronce -->
                     <h1 class="display-6"
                         th:text="${iter.index == 0 ? '🥇' : (iter.index == 1 ? '🥈' : '🥉')}"></h1>
 

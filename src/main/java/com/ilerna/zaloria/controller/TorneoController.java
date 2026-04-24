@@ -67,22 +67,26 @@ public String mostrarFormulario(Model model) {
 
     // GUARDAR TORNEO (Creación o Edición)
     @PostMapping("/torneos/guardar")
-public String guardarTorneo(@ModelAttribute("torneo") Torneo torneo) {
-    // Si estamos editando (id no es nulo)
+public String guardarTorneo(@ModelAttribute("torneo") Torneo torneo, RedirectAttributes ra) {
+    
+    // SEGURIDAD: Usamos getFecha() porque así se llama tu atributo en la clase Torneo
+    if (torneo.getFecha() != null && torneo.getFecha().before(new java.util.Date())) {
+        ra.addFlashAttribute("errorTorneo", "⚠️ No puedes programar un torneo en una fecha que ya pasó.");
+        return "redirect:/torneos/nuevo"; 
+    }
+
+    // --- El resto de tu lógica de edición/guardado sigue igual ---
     if (torneo.getId() != null) {
         Torneo torneoExistente = torneoRepo.findById(torneo.getId()).orElse(null);
         if (torneoExistente != null) {
-            // Si en el formulario el banner viene vacío, recuperamos el anterior
             if (torneo.getBannerUrl() == null || torneo.getBannerUrl().isEmpty()) {
                 torneo.setBannerUrl(torneoExistente.getBannerUrl());
             }
-            // Mantenemos el estado actual si no queremos que cambie al editar
             if (torneo.getEstado() == null) {
                 torneo.setEstado(torneoExistente.getEstado());
             }
         }
     } else {
-        // Si es nuevo, le ponemos estado ABIERTO por defecto
         torneo.setEstado("ABIERTO");
     }
 

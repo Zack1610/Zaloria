@@ -1,3 +1,4 @@
+<!-- PÁGINA DE INSCRIPCIÓN A TORNEOS - Permite a equipos inscribirse en un torneo -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,7 +11,7 @@
 <body>
 
     <header>
-        <div th:replace="~{layout :: boton-tema}"></div>
+        <div th:replace="~{layout :: boton-tema(true)}"></div>
     </header>
 
     <main class="container py-5">
@@ -20,6 +21,7 @@
 
                 <article class="card card-gamer p-4 text-center shadow-lg">
 
+                    <!-- Banner del torneo para identificación visual -->
                     <div class="mb-4">
                         <img th:src="@{'/images/banners/' + ${torneo.bannerUrl != null ? torneo.bannerUrl : 'default_banner.jpg'}}"
                              class="img-fluid rounded border border-info shadow"
@@ -27,15 +29,19 @@
                              style="max-height: 200px; width: 100%; object-fit: cover;">
                     </div>
 
+                    <!-- Título del torneo donde se va a inscribir -->
                     <h3 class="mb-4">
                         Inscribir en:
                         <span class="text-info" th:text="${torneo.nombre}"></span>
                     </h3>
 
+                    <!-- Formulario de inscripción -->
                     <form th:action="@{/torneos/inscribir/guardar}" method="post">
 
+                        <!-- ID del torneo (oculto) -->
                         <input type="hidden" name="torneoId" th:value="${torneo.id}">
 
+                        <!-- Campo: Selección del equipo a inscribir -->
                         <div class="mb-4 text-start">
                             <label class="form-label text-info fw-bold">Selecciona el Equipo Aspirante:</label>
 

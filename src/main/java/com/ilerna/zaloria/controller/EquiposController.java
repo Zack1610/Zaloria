@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import java.io.File;
 
@@ -49,5 +50,30 @@ public class EquiposController {
         equiposRepo.save(equipo);
         return "redirect:/equipos"; 
     }
+
+// 1. MÉTODO PARA EDITAR: Busca el equipo y abre el formulario
+@GetMapping("/equipos/editar/{id}")
+public String mostrarFormularioEditar(@PathVariable("id") Integer id, Model model) { // CAMBIADO A Integer
+    Equipos equipos = equiposRepo.findById(id).orElse(null); 
+    
+    if (equipos != null) {
+        model.addAttribute("equipo", equipos);
+        File carpetaLogos = new File("src/main/resources/static/images/logos/");
+        model.addAttribute("listaLogos", carpetaLogos.list());
+        return "equipos-form"; 
+    }
+    return "redirect:/equipos";
 }
 
+// 2. MÉTODO PARA ELIMINAR
+@GetMapping("/equipos/eliminar/{id}")
+public String eliminarEquipo(@PathVariable("id") Integer id) { 
+    try {
+        equiposRepo.deleteById(id); 
+    } catch (Exception e) {
+        System.out.println("Error al eliminar: El equipo tiene jugadores vinculados."); 
+        return "redirect:/equipos?error=true";
+    }
+    return "redirect:/equipos";
+    }
+}

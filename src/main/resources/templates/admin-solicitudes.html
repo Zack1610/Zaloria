@@ -1,3 +1,4 @@
+<!-- PÁGINA DE GESTIÓN DE SOLICITUDES - Administra solicitudes de ingreso de jugadores al gremio -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,34 +11,46 @@
 <body class="bg-dark text-white">
 
     <header>
-        <div th:replace="~{layout :: boton-tema}"></div>
+        <div th:replace="~{layout :: boton-tema(true)}"></div>
     </header>
 
     <main class="container my-5">
 
         <section class="card card-gamer p-4 shadow-lg border-info">
 
+            <!-- Título: Solicitudes de ingreso al gremio -->
             <h2 class="cyan-text mb-4">📜 Solicitudes de Ingreso al Gremio</h2>
 
+            <!-- Tabla de solicitudes -->
             <div class="table-responsive">
                 <table class="table table-dark table-hover align-middle">
                     <thead>
                         <tr class="text-info">
+                            <!-- Columna: Nickname del solicitante -->
                             <th>Nickname</th>
+                            <!-- Columna: Email de contacto -->
                             <th>Email</th>
+                            <!-- Columna: Fecha de creación de la solicitud -->
                             <th>Fecha</th>
+                            <!-- Columna: Acciones disponibles -->
                             <th>Acciones</th>
                         </tr>
                     </thead>
 
                     <tbody>
+                        <!-- Itera sobre cada solicitud pendiente -->
                         <tr th:each="s : ${solicitudes}">
+                            <!-- Nickname del jugador que solicita -->
                             <td class="fw-bold" th:text="${s.nickname}"></td>
+                            <!-- Email del solicitante -->
                             <td th:text="${s.email}"></td>
+                            <!-- Fecha y hora de la solicitud -->
                             <td th:text="${#temporals.format(s.fechaCreacion, 'dd/MM/yyyy HH:mm')}"></td>
 
+                            <!-- Botón de acciones para la solicitud -->
                             <td class="d-flex gap-2">
 
+                                <!-- Botón: Aceptar y fichar jugador (solo si está PENDIENTE) -->
                                 <button type="button" class="btn btn-success btn-sm"
                                         th:if="${s.estado == 'PENDIENTE'}"
                                         data-bs-toggle="modal"
@@ -45,6 +58,7 @@
                                     🏆 Fichar
                                 </button>
 
+                                <!-- Formulario: Rechazar solicitud (solo si está PENDIENTE) -->
                                 <form th:action="@{/admin/solicitudes/actualizar}" method="post"
                                       th:if="${s.estado == 'PENDIENTE'}">
                                     <input type="hidden" name="id" th:value="${s.id}">
@@ -52,16 +66,19 @@
                                     <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
                                 </form>
 
+                                <!-- Botón: Ver motivo de la solicitud -->
                                 <button class="btn btn-outline-info btn-sm"
                                         th:title="${s.motivo}"
                                         onclick="alert('Motivo: ' + this.getAttribute('title'))">
                                     Ver
                                 </button>
 
+                                <!-- Modal popup para formalizar el fichaje -->
                                 <div class="modal fade" th:id="'modalFichaje' + ${s.id}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered text-dark">
                                         <div class="modal-content bg-dark border-info text-white">
 
+                                            <!-- Encabezado del modal -->
                                             <header class="modal-header border-info">
                                                 <h5 class="modal-title cyan-text">
                                                     Formalizar Fichaje: <span th:text="${s.nickname}"></span>
@@ -69,12 +86,15 @@
                                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                             </header>
 
+                                            <!-- Formulario para crear jugador y asignarle equipo -->
                                             <form th:action="@{/jugadores/guardar}" method="post">
                                                 <div class="modal-body">
+                                                    <!-- Datos del jugador (desde la solicitud) -->
                                                     <input type="hidden" name="nickname" th:value="${s.nickname}">
                                                     <input type="hidden" name="email" th:value="${s.email}">
                                                     <input type="hidden" name="solicitudId" th:value="${s.id}">
 
+                                                    <!-- Campo: Selección del equipo a asignar -->
                                                     <div class="mb-3 text-start">
                                                         <label class="form-label text-info">Asignar Equipo:</label>
                                                         <select name="equipo.id" class="form-select bg-dark text-white border-secondary" required>
@@ -83,6 +103,7 @@
                                                         </select>
                                                     </div>
 
+                                                    <!-- Campo: Selección del skin/avatar -->
                                                     <div class="mb-3 text-start">
                                                         <label class="form-label text-info">Seleccionar Skin:</label>
                                                         <select name="skinUrl" class="form-select bg-dark text-white border-secondary" required>
@@ -92,6 +113,7 @@
                                                     </div>
                                                 </div>
 
+                                                <!-- Pie del modal con botones -->
                                                 <footer class="modal-footer border-info">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                                     <button type="submit" class="btn btn-info">Confirmar e Incorporar</button>

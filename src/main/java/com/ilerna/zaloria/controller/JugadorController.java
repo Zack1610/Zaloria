@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author Zack
  */
 import java.io.File; // Importante para leer la carpeta
+import java.util.List;
 
 @Controller
 public class JugadorController {
@@ -34,75 +35,93 @@ public class JugadorController {
     @Autowired
     private SolicitudRepository solicitudRepo; 
 
-   // Listar todos los jugadores
+  // Listar todos los jugadores
     @GetMapping("/jugadores")
     public String listarJugadores(Model model) {
-        model.addAttribute("listaJugadores", jugadorRepo.findAll()); // Trae todos los datos de la DB
-        return "jugadores-lista"; // Carga la página de la lista
+        model.addAttribute("listaJugadores", jugadorRepo.findAll()); 
+        return "jugadores-lista"; 
     }
 
     // Formulario para nuevo jugador
     @GetMapping("/jugadores/nuevo")
     public String mostrarFormulario(Model model) {
-        model.addAttribute("jugador", new Jugador()); // Crea objeto vacío para el formulario
-        model.addAttribute("listaEquipos", equiposRepo.findAll()); // Lista de equipos para el selector
+        model.addAttribute("jugador", new Jugador());
         
-        // Lee la carpeta de imágenes para elegir la Skin
+        // FILTRO: Solo equipos con cupo disponible
+        List<Equipos> equiposConCupo = equiposRepo.findAll().stream()
+                .filter(e -> {
+                    long actuales = jugadorRepo.countByEquipo(e);
+                    int maximo = (e.getMaxJugadores() != null) ? e.getMaxJugadores() : 5;
+                    return actuales < maximo;
+                })
+                .toList();
+        
+        model.addAttribute("listaEquipos", equiposConCupo); 
+        
         File carpetaSkins = new File("src/main/resources/static/images/skins/");
         model.addAttribute("listaSkins", carpetaSkins.list()); 
         
         return "jugadores-form";
     }
 
-   @PostMapping("/jugadores/guardar")
-public String guardarJugador(Jugador jugador, @RequestParam(value="solicitudId", required=false) Integer solicitudId, RedirectAttributes ra) {
-    
-    Equipos equipo = equiposRepo.findById(jugador.getEquipo().getId()).orElse(null);
-    
-    if (equipo != null) {
-        long actuales = jugadorRepo.countByEquipo(equipo);
+    @PostMapping("/jugadores/guardar")
+    public String guardarJugador(Jugador jugador, @RequestParam(value="solicitudId", required=false) Integer solicitudId, RedirectAttributes ra) {
         
-        if (actuales >= equipo.getMaxJugadores()) {
-            ra.addFlashAttribute("errorTorneo", "⚠️ El equipo " + equipo.getNombre() + " ya está lleno.");
+        Equipos equipo = equiposRepo.findById(jugador.getEquipo().getId()).orElse(null);
+        
+        if (equipo != null) {
+            long actuales = jugadorRepo.countByEquipo(equipo);
             
-            // Si venimos de una solicitud, volvemos allí. Si no, volvemos a la lista de jugadores.
-            if (solicitudId != null) {
-                return "redirect:/admin/solicitudes";
-            } else {
-                return "redirect:/jugadores";
+            if (actuales >= equipo.getMaxJugadores()) {
+                ra.addFlashAttribute("errorTorneo", "⚠️ El equipo " + equipo.getNombre() + " ya está lleno.");
+                
+                if (solicitudId != null) {
+                    return "redirect:/admin/solicitudes";
+                } else {
+                    return "redirect:/jugadores";
+                }
             }
         }
-    }
 
-    jugadorRepo.save(jugador);
-    
-    if (solicitudId != null) {
-        solicitudRepo.findById(solicitudId).ifPresent(s -> {
-            s.setEstado("ACEPTADA");
-            solicitudRepo.save(s);
-        });
+        jugadorRepo.save(jugador);
+        
+        if (solicitudId != null) {
+            solicitudRepo.findById(solicitudId).ifPresent(s -> {
+                s.setEstado("ACEPTADA");
+                solicitudRepo.save(s);
+            });
+        }
+        return "redirect:/jugadores";
     }
-    return "redirect:/jugadores";
-}
 
     // Editar jugador existente
     @GetMapping("/jugadores/editar/{id}")
     public String editarJugador(@PathVariable("id") Integer id, Model model) {
-        Jugador j = jugadorRepo.findById(id).orElse(null); // Busca al jugador por su ID
+        Jugador j = jugadorRepo.findById(id).orElse(null);
         model.addAttribute("jugador", j); 
-        model.addAttribute("listaEquipos", equiposRepo.findAll()); // Carga equipos de nuevo
+
+        // FILTRO: Equipos con cupo O el equipo actual del jugador que estamos editando
+        List<Equipos> equiposDisponibles = equiposRepo.findAll().stream()
+                .filter(e -> {
+                    long actuales = jugadorRepo.countByEquipo(e);
+                    int maximo = (e.getMaxJugadores() != null) ? e.getMaxJugadores() : 5;
+                    // El equipo es válido si hay sitio O si es el equipo que ya tiene asignado el jugador
+                    return actuales < maximo || (j != null && j.getEquipo() != null && e.getId().equals(j.getEquipo().getId()));
+                })
+                .toList();
+
+        model.addAttribute("listaEquipos", equiposDisponibles); 
         
         File carpetaSkins = new File("src/main/resources/static/images/skins/");
-        model.addAttribute("listaSkins", carpetaSkins.list()); // Carga skins para poder cambiarlas
+        model.addAttribute("listaSkins", carpetaSkins.list()); 
         
         return "jugadores-form"; 
     }
 
     // Borrar jugador
     @GetMapping("/jugadores/borrar/{id}")
-    public String borrarJugador(@PathVariable("id") Integer id) { //sirve para capturar el ID directamente de la URL (ej: /borrar/5).
-        jugadorRepo.deleteById(id); // Elimina el registro por ID de la base de datos
+    public String borrarJugador(@PathVariable("id") Integer id) {
+        jugadorRepo.deleteById(id);
         return "redirect:/jugadores";
-    
     }
 }

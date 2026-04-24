@@ -1,3 +1,4 @@
+<!-- PÁGINA DE HISTORIAL DE RESULTADOS - Muestra todos los torneos finalizados con resultados -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,13 +11,15 @@
 <body class="bg-dark text-white">
 
     <header>
-        <div th:replace="~{layout :: boton-tema}"></div>
+        <div th:replace="~{layout :: boton-tema(true)}"></div>
     </header>
 
     <main class="container my-5">
 
+        <!-- Tarjeta principal del historial -->
         <section class="card card-gamer p-4 border-info bg-dark">
 
+            <!-- Título con icono de trofeo -->
             <h2 class="cyan-text mb-4">🏆 Historial de Torneos Finalizados</h2>
 
             <div class="table-responsive">
@@ -32,11 +35,17 @@
                     </thead>
 
                     <tbody>
+                        <!-- Itera sobre cada resultado registrado -->
                         <tr th:each="r : ${listaResultados}">
+                            <!-- Nombre del torneo -->
                             <td th:text="${r.torneo.nombre}"></td>
+                            <!-- Equipo ganador -->
                             <td class="fw-bold text-success" th:text="${r.equipoGanador.nombre}"></td>
+                            <!-- Jugador MVP (Most Valuable Player) del torneo -->
                             <td th:text="${r.mvp.nickname}"></td>
+                            <!-- Puntuación total del equipo ganador -->
                             <td th:text="${r.puntuacion}"></td>
+                            <!-- Total de eliminaciones conseguidas en el torneo -->
                             <td th:text="${r.eliminaciones}"></td>
                         </tr>
                     </tbody>

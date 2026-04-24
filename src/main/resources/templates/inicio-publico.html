@@ -80,8 +80,8 @@
 <body class="bg-dark text-white">
 
     <div class="tema-toggle-container">
-        <div th:replace="~{layout :: boton-tema}"></div>
-    </div>
+    <div th:replace="~{layout :: boton-tema(mostrarSalir=false)}"></div>
+</div>
 
     <header class="header-comunidad py-5 text-center">
         <h1 class="display-4 fw-bold">Region global Zaloria</h1>
@@ -114,7 +114,7 @@
                                 <span class="fs-4">🏆</span>
                             </div>
                             <h5 class="cyan-text fw-bold mb-2" style="font-size: 1.1rem;">Muro de las Leyendas</h5>
-                            <p class="cyan-text-50 small mb-3">Consulta el registro de campeones y leyendas.</p>
+                            <p class="cyan-text small mb-3">Consulta el registro de campeones y leyendas.</p>
                             <div class="d-grid">
                                 <a href="/resultados-publicos" class="btn btn-gamer btn-sm fw-bold">VER GLORIA</a>
                             </div>
@@ -131,9 +131,9 @@
                     <h2 class="cyan-text">El Lobby: Bombazo</h2>
                     <p class="cyan-text">Los aventureros Protestan!</p>
                     <img th:src="@{/images/comunidad/subida-pavos.png}" class="img-fluid rounded mb-3" alt="pavos">
-                    <p>Nueva temporada llegó cargada de <strong>polémica</strong> vinculada a un aumento de precio...</p>
+                    <p class="text-info">Nueva temporada llegó cargada de <strong>polémica</strong> vinculada a un aumento de precio...</p>
                     <blockquote class="border-start ps-3 fst-italic">
-                        La suscripción mensual, “El Pase“, pasará de costar 950 paVos a 800...
+                        <p class="text-info">La suscripción mensual, “El Pase“, pasará de costar 950 paVos a 800... bajando el precio pero disminuyendo los 1500 pavos que antes se conseguian...</p>
                     </blockquote>
                 </article>
 
@@ -147,7 +147,7 @@
                 <section class="card card-gamer p-4 mb-4">
                     <header class="card-header border-0 bg-transparent text-center">
                         <h2 class="cyan-text mt-2">ÚNETE A LOS COLISEOS DE ZALORIA</h2>
-                        <p class="text-white-50 small">Envía tu perfil para ser reclutado...</p>
+                        <p class="cyan-text small">Envía tu perfil para ser reclutado...</p>
                     </header>
 
                     <form id="formSolicitud" th:action="@{/solicitudes/guardar}" method="POST">
