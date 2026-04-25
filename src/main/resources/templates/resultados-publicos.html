@@ -10,7 +10,7 @@
 
 <body>
     <header>
-        <div th:replace="~{layout :: boton-tema(true)}"></div>
+        <div th:replace="~{layout :: boton-tema(mostrarSalir=false)}"></div>
     </header>
 
     <main class="container my-5">
@@ -52,7 +52,7 @@
         <section class="row mb-5 justify-content-center">
             <header class="col-12 text-center mb-4">
                 <h2 class="text-danger h3">💀 TOP KILLERS (MVPs) 💀</h2>
-                <p class="text-white-50 small">Suma total de eliminaciones conseguidas como MVP</p>
+                <p class="text-danger small">Suma total de eliminaciones conseguidas como MVP</p>
             </header>
 
             <article class="col-md-3 text-center"

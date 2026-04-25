@@ -93,14 +93,41 @@ INSERT INTO jugador (nickname, email, skin_url, id_equipo) VALUES
 -- ==========================================================
 INSERT INTO torneo (id, nombre, fecha, premio, max_equipos, estado, banner_url, ganador_id) VALUES
 (1, 'Impact Cop', '2026-04-15 02:40:00', 15000, 5, 'FINALIZADO', 'impact-cop.png', 1),
-(2, 'Copa Daiku', '2026-04-16 02:43:00', 500, 4, 'FINALIZADO', 'copa-daiku.png', 4),
-(3, 'Terraclash Cup', '2026-04-18 15:53:00', 500, 4, 'FINALIZADO', 'copa-terraclash.png', 4);
+(2, 'Copa Daiku', '2026-04-16 02:43:00', 500, 4, 'EN CURSO', 'copa-daiku.png', NULL),
+(3, 'Terraclash Cup', '2026-04-18 15:53:00', 500, 4, 'ABIERTO', 'copa-terraclash.png', NULL),
+(4, 'Copa victory', '2026-04-20 18:00:00', 1000, 4, 'FINALIZADO', 'copa-victory-cop.png', 2),
+(5, 'Copa Mask', '2026-04-22 20:00:00', 2000, 4, 'FINALIZADO', 'copa-mask-cup.png', 3);
+
+-- Inscripciones (Simulando que los equipos 1 y 2 participaron en el torneo 1)
+INSERT INTO inscripcion (torneo_id, equipo_id) VALUES 
+(1, 1), -- Inscribe al equipo 1 en el torneo 1
+(1, 2); 
+(1, 3); 
+(1, 4); 
+(2, 4); -- Inscribe al equipo 4 en el torneo 2
+(2, 5);
+(2, 1); 
+(2, 3);
+(3, 4); -- Inscribe al equipo 4 en el torneo 3
+(3, 6);
+(3, 2); 
+(3, 1);
+(4, 2); -- Inscribe al equipo 2 en el torneo 4
+(4, 7);
+(4, 3);
+(4, 5); 
+(5, 3); -- Inscribe al equipo 3 en el torneo 5
+(5, 1);
+(5, 2); 
+(5, 4);
 
 -- Resultados (Simulando estadísticas)
 INSERT INTO resultado (id_torneo, equipo_ganador_id, id_mvp, eliminaciones, puntos_posicion, puntos_totales, puntuacion) VALUES
 (1, 1, 1, 37, 30, 67, '67 PTS'),
-(2, 4, 13, 15, 49, 64, '64 PTS'),
-(3, 4, 14, 36, 59, 95, '95 PTS');
+(2, 1, 13, 15, 49, 64, '64 PTS'),
+(3, 4, 14, 36, 59, 95, '95 PTS'),
+(4, 2, 15, 28, 45, 73, '73 PTS'),
+(5, 3, 16, 32, 52, 84, '84 PTS');
 
 -- ==========================================================
 -- 4. SOLICITUDES (Usando las imágenes sobrantes para nuevos candidatos)
@@ -121,6 +148,20 @@ WHERE nickname = 'IceQueen';
 
 INSERT INTO jugador (nickname, email, skin_url, id_equipo) 
 VALUES ('IceQueen', 'esdeath@example.com', 'pez.skin.jpg', 8);
+
+UPDATE solicitudes 
+SET estado = 'ACEPTADA' 
+WHERE nickname = 'ElectroArchon';
+
+INSERT INTO jugador (nickname, email, skin_url, id_equipo) 
+VALUES ('ElectroArchon', 'raiden@example.com', 'lexa.skin.jpg', 8);
+
+UPDATE solicitudes 
+SET estado = 'ACEPTADA' 
+WHERE nickname = 'campero';
+
+INSERT INTO jugador (nickname, email, skin_url, id_equipo) 
+VALUES ('campero', 'juancarlos@example.com', 'joker.skin.jpg', 8);
 
 -- ==========================================================
 -- 5. CONSULTAS DE GESTIÓN (SIMULACIÓN DE REPORTES JDBC)
@@ -148,9 +189,13 @@ DEMOSTRACIÓN DE FUNCIONAMIENTO
 -- ==========================================================
 
 -- A. Mostrar todos los jugadores y sus equipos (JOIN)
-SELECT j.nickname as 'Jugador', e.nombre as 'Equipo', j.skin_url as 'Skin' 
-FROM jugador j 
-INNER JOIN equipo e ON j.id_equipo = e.id;
+SELECT // "Selecciona las siguientes columnas para mostrar..."
+    j.nickname as 'Jugador', // "El apodo del jugador de la tabla j, renombrado como 'Jugador'"
+    e.nombre as 'Equipo',   // "El nombre del equipo de la tabla e, renombrado como 'Equipo'"
+    j.skin_url as 'Skin'    // "La ruta de la imagen de la skin de la tabla j, llamada 'Skin'"
+FROM jugador j              // "Busca en la tabla 'jugador' y ponle el alias 'j' para abreviar"
+INNER JOIN equipo e         // "Cruza los datos con la tabla 'equipo' (alias 'e') solo donde haya coincidencia" 
+ON j.id_equipo = e.id;      // "La condición: que el id_equipo del jugador sea igual al id del equipo" 
 
 -- B. Mostrar el Hall de la Fama (Ranking)
 SELECT e.nombre as 'Equipo', COUNT(r.id) as 'Copas Ganadas' 
